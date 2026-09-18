@@ -13,6 +13,7 @@ Technologies we want to use:
 * Favicon library  
 * Cookie-session library  
 * passport-github2 to use Auth0 if possible
+* React (potentially)
 
 Users will have:
 * Username  
