@@ -13,9 +13,12 @@ import MatchPage from "./pages/MatchPage"
 import ProfilePage from "./pages/ProfilePage"
 import UserPage from "./pages/UserPage"
 
+import Topbar from "./components/Topbar"
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
+      <Topbar />
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/games" element={<GamePage />} />
