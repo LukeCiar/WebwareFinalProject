@@ -4,9 +4,9 @@ import {useParams} from "react-router-dom"
 function UserPage() { 
     const { username } = useParams();
     // Given username get the profilePicture, bio, and achivements list from server
-    const profilePicture = "none"
-    const bio = "Some text about me..."
-    const achivements = []
+    const profilePicture = "none";
+    const bio = "Some text about me...";
+    const achivements = [];
 
     return (
         <>  
