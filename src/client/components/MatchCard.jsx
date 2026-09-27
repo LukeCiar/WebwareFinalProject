@@ -1,8 +1,9 @@
-function MatchCard() { 
+function MatchCard({ match }) {
     return (
-        <p>
-            Nothing Here Yet
-        </p>
+        <tr>
+            <td>Game Played: {match.gameName}</td>
+            <td>Players: {match.players.join(" ")}</td>
+        </tr>
     )   
 }
 export default MatchCard;
