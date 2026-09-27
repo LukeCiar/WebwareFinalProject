@@ -26,9 +26,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/login" element={<LoginPage />} />
         <Route path="/matches" element={<MatchPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        {/*
-        <Route path="/user?userId" element={<UserPage />} />
-        */}
+        
+        <Route path="/user/:username" element={<UserPage />} />
+
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
