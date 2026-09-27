@@ -20,7 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <Topbar />
       <Routes>
-        <Route path="/" element={<App />} />
+        <Route path="/" element={<App />} /> {/*Eventually turn this into HomePage */}
         <Route path="/games" element={<GamePage />} />
         <Route path="/home" element={<HomePage/>} />
         <Route path="/login" element={<LoginPage />} />
