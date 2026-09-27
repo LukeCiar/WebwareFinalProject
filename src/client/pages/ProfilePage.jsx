@@ -1,7 +1,7 @@
 function ProfilePage() { 
     return (
         <p>
-            Setting go here
+            Your user page, so setting need to go here too
         </p>
     )   
 }
