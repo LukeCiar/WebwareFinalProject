@@ -5,6 +5,13 @@ import "./App.css";
 function App() {
   const [count, setCount] = useState(0);
 
+//WONT WORK IF UNCOMMENTED - can't have asyc components, need to declare async inner functions that are called by other stuff
+//   response = await fetch("/add", {
+//     method:"POST",
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify({name: "Catan", description: "Good game"})
+//   })
+
   return (
     <div className="App">
       <div>
