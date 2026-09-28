@@ -1,8 +1,9 @@
-function GameCard() { 
+function GameCard({ game }) { 
     return (
-        <p>
-            Nothing Here Yet
-        </p>
-    )   
+        <tr>
+            <td>{game.name}</td>
+            <td>{game.description}</td>
+        </tr>
+    ) 
 }
 export default GameCard;
