@@ -37,7 +37,12 @@ export const init = async () => {
 
 export const addGame = async (game) => {
     //TODO: check fields?
-    const id = await gameCollection.insertOne(game)
+    await gameCollection.insertOne(game)
+}
+
+export const getAllGames = async () => {
+    const games = await gameCollection.find().toArray()
+    return games
 }
 
 
@@ -54,6 +59,14 @@ export const getAllMatches = async () => {
     return matches
 }
 
-
-
 //----------------Users----------------
+
+export const addUser = async (user) => {
+    //TODO: check fields?
+    userCollection.insertOne(user)
+}
+
+export const getAllUsers = async () => {
+    const users = await userCollection.find().toArray()
+    return users
+}
