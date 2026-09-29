@@ -20,12 +20,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <Topbar />
       <Routes>
         <Route path="/" element={<App />} /> {/*Eventually turn this into HomePage */}
-        <Route path="/games" element={<GamePage />} />
         <Route path="/home" element={<HomePage/>} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/matches" element={<MatchPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        
+
+        <Route path="/game/:gamename" element={<GamePage />} />
         <Route path="/user/:username" element={<UserPage />} />
 
       </Routes>
