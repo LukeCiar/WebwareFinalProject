@@ -25,6 +25,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="matches" element={<MatchPage />} />
           <Route path="profile" element={<ProfilePage />} />
 
+          <Route path="game/:gameName" element={<GamePage />} />
+          <Route path="game/:gameName/match/:matchId" element={<MatchPage />} />
           <Route path="user/:username" element={<UserPage />} />
         </Route>
       </Routes>
