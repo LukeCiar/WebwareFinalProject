@@ -2,8 +2,7 @@ import {useParams} from "react-router-dom";
 import MatchCard from "../components/MatchCard.jsx";
 
 function GamePage() {
-    const gameName = "The Game"
-    // const gameName = useParams().gameName; // TODO How to make this work?
+    const gameName = useParams().gameName;
     // TODO Use gameName to get the rest of the information from the database
     const gamePicture = "none";
     const gameInfo = "This game is a game in which players play a game. It has been played many times, and not played many more times. Critics agree that it is truly one of the games of all time.";
