@@ -18,9 +18,20 @@ app.post("/addGame", async (req, res) => {
     res.statusCode(201).end()
 })
 
-app.get("/games", async (req, res) => {
+app.get("/getGames", async (req, res) => {
     const games = await db.getAllGames()
     res.status(200).send(games)
+})
+
+//see the doc comment on getFilteredGames for details
+app.get("/getFilteredGames", async (req, res) => {
+    const games = await db.getFilteredGames(req.body.filter)
+    res.status(200).send(games)
+})
+
+app.post("/deleteGame", async (req, res) => {
+    await db.deleteGame(req.body.name)
+    res.status(200).end()
 })
 
 //----------------Matches----------------
@@ -30,9 +41,26 @@ app.post("/addMatch", async (req, res) => {
     res.statusCode(201).end()
 })
 
-app.get("/matches", async (req, res) => {
+app.get("/getMatches", async (req, res) => {
     const matches = await db.getAllMatches()
     res.status(200).send(matches)
+})
+
+//See the doc comment on getFilteredMatches for details
+app.get("/getFilteredMatches", async (req, res) => {
+    const matches = await db.getFilteredMatches(req.body.filter)
+    res.status(200).send(matches)
+})
+
+//See the doc comment on modifyMatch for details
+app.post("/modifyMatch", async (req, res) => {
+    await db.modifyMatch(req.body.oldId, req.body.newMatch)
+    res.status(200).end()
+})
+
+app.post("/deleteMatch", async (req, res) => {
+    await db.deleteMatch(req.body.id)
+    res.status(200).end
 })
 
 //----------------Users----------------
@@ -42,10 +70,28 @@ app.post("/addUser", async (req, res) => {
     res.statusCode(201).end()
 })
 
-app.get("/users", async (req, res) => {
+app.get("/getUsers", async (req, res) => {
     const users = await db.getAllUsers()
     res.status(200).send(users)
 })
+
+app.get("/getUserByName", async (req, res) => {
+    const user = await db.getUserByName(req.body.username)
+    res.status(200).send(user)
+})
+
+//See the doc comment on modifyUser for details
+app.post("/modifyUser", async (req, res) => {
+    await db.modifyUser(req.body.username, req.body.update)
+    res.status(200).end()
+})
+
+app.post("/deleteUser", async (req, res) => {
+    await db.deleteUser(req.body.username)
+    res.status(200).end()
+})
+
+//--------------------------------
 
 const port = process.env.PORT || 3000
 ViteExpress.listen(app, port, () =>

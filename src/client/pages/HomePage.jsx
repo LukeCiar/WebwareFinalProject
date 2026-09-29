@@ -8,11 +8,11 @@ function HomePage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const mResponse = await fetch("/matches", {method: "GET"})
+            const mResponse = await fetch("/getMatches", {method: "GET"})
             const mData = await mResponse.json()
             setMatches(mData)
 
-            const gResponse = await fetch("/games", {method: "GET"})
+            const gResponse = await fetch("/getGames", {method: "GET"})
             const gData = await gResponse.json()
             setGames(gData)
         }
