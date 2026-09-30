@@ -21,6 +21,7 @@ function Achievements({username}) {
         const fetchData = async () => {
             if (username != "") {
                 // Get the current users achievements from server
+                // Problem here is I don't think a get request can have a body
                 const userResponse = await fetch("/getUserByName", 
                     {method: "GET",
                     headers: { 'Content-Type': 'application/json' },
@@ -31,7 +32,7 @@ function Achievements({username}) {
                 setMatches(mData);
 
                 //Get a list of completed achivements
-                //TODO: update completedAchievements
+                //TODO: update completedAchievements from get request
             }
         }
         fetchData()
@@ -42,7 +43,7 @@ function Achievements({username}) {
         const completedColor = completed ? "#FFD700":"#A3A3A3"
         //const style_color = `width: 200px; height: 300px; background-color: ${completedColor};`
         return (
-            <div key={key} style={{width: "200px", height: "300px", backgroundColor: `${completedColor}`}}>
+            <div title={achievement[1]} key={key} style={{border:"1px solid black", width: "100px", height: "100px", backgroundColor: `${completedColor}`}}>
                 <p title={achievement[1]}>
                     {achievement[0]}
                 </p>
@@ -50,10 +51,10 @@ function Achievements({username}) {
         )
     }
 
-    return (
-        <>
+        return (
+            <div style={{display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap:"auto"}}>
             {Object.entries(LIST_OF_ACHIVEMENTS).map( ([key, value]) => drawAchievement(key, value, completedAchievements.includes(key)) )}
-        </>
-    )   
+        </div>
+        )   
 }
 export default Achievements;
