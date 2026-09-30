@@ -75,9 +75,10 @@ app.get("/getUsers", async (req, res) => {
     res.status(200).send(users)
 })
 
-app.get("/getUserByName", async (req, res) => {
+app.post("/getUserByName", async (req, res) => {
     const user = await db.getUserByName(req.body.username)
-    res.status(200).send(user)
+    // User can evaluate to null if none is found and .send(null) causes an error when being parsed
+    res.status(200).json(user)
 })
 
 //See the doc comment on modifyUser for details

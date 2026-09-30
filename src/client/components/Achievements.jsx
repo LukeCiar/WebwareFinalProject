@@ -23,16 +23,20 @@ function Achievements({username}) {
                 // Get the current users achievements from server
                 // Problem here is I don't think a get request can have a body
                 const userResponse = await fetch("/getUserByName", 
-                    {method: "GET",
+                    {method: "POST",
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify( {} ) 
+                    body: JSON.stringify( {username} ) 
                     }
                 )
-                const userData = await mResponse.json();
-                setMatches(mData);
-
-                //Get a list of completed achivements
-                //TODO: update completedAchievements from get request
+                const userData = await userResponse.json();
+                
+                if (userData != null) {
+                    //Get a list of completed achivements
+                    //TODO: update userData.achievements with the naming scheme implemented when creating users
+                    if (userData.achievements != null) {
+                        setCompletedAchievements(userData.achievements)
+                    }
+                }
             }
         }
         fetchData()
