@@ -1,0 +1,24 @@
+function Achievements() { 
+    // Storing an achivement in an dictionaly where key is achivement number and an achivement is a array of achivement name, description
+    const list_of_achivemments = {
+        "1": ["Known Plyer", "Create an account"],
+        "2": ["Starting out", "Play your first game"],
+        "3": ["Getting into it", "Participate in 5 matches"],
+        "4": ["Player of games", "Participate in 10 matches"],
+        "5": ["Veteran Boardgamer", "Participate in 50 or more matches"],
+        "6": ["Winner!", "Win your first game"],
+        "7": ["Deus ex Machina", "Win 10 or more matches"],
+        "8": ["Explorer", "Play 3 different types of games"],
+        "9": ["Jack of all trades", "Play 10 or more different types of games"],
+        "10": ["Dedication", "Win 5 different matches of the same game"]
+    }
+
+    
+
+    return (
+        <p>
+            Create a match
+        </p>
+    )   
+}
+export default Achievements;
