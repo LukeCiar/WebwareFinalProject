@@ -111,7 +111,7 @@ export const getAllUsers = async () => {
 }
 
 export const getUserByName = async (username) => {
-    const user = await userCollection.findOne({username}).project({_id: 0})
+    const user = await userCollection.findOne({username})
     return user
 }
 

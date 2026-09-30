@@ -24,7 +24,7 @@ app.get("/getGames", async (req, res) => {
 })
 
 //see the doc comment on getFilteredGames for details
-app.get("/getFilteredGames", async (req, res) => {
+app.post("/getFilteredGames", async (req, res) => {
     const games = await db.getFilteredGames(req.body.filter)
     res.status(200).send(games)
 })
@@ -47,7 +47,7 @@ app.get("/getMatches", async (req, res) => {
 })
 
 //See the doc comment on getFilteredMatches for details
-app.get("/getFilteredMatches", async (req, res) => {
+app.post("/getFilteredMatches", async (req, res) => {
     const matches = await db.getFilteredMatches(req.body.filter)
     res.status(200).send(matches)
 })
@@ -75,9 +75,10 @@ app.get("/getUsers", async (req, res) => {
     res.status(200).send(users)
 })
 
-app.get("/getUserByName", async (req, res) => {
+app.post("/getUserByName", async (req, res) => {
     const user = await db.getUserByName(req.body.username)
-    res.status(200).send(user)
+    // User can evaluate to null if none is found and .send(null) causes an error when being parsed
+    res.status(200).json(user)
 })
 
 //See the doc comment on modifyUser for details

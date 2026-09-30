@@ -1,5 +1,6 @@
 
 import {useParams} from "react-router-dom"
+import Achievements from "../components/Achievements"
 
 function UserPage() { 
     const { username } = useParams();
@@ -19,10 +20,7 @@ function UserPage() {
             </p>
 
             <h2> Achivements: </h2>
-            {/*
-                This shoule be an achivements component, either just a list of all achivemnts where some are achived and some not
-                Or just show achived achivements which should still be a list of Achviements components just with paramaters for what achivement
-            */}
+            { <Achievements username={username} /> }
 
             <h2> Recently Played Games: </h2>
             {/*
