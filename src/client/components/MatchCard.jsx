@@ -2,7 +2,7 @@ function MatchCard({ match }) {
     return (
         <tr>
             <td>{match.gameName}</td>
-            <td>{match.players.join(", ")}</td>
+            <td>{match.players.map(p => p.name).join(", ")}</td>
         </tr>
     )   
 }

@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react"
 import MatchCard from "../components/MatchCard"
 import GameCard from "../components/GameCard"
+import MatchForm from "../components/MatchForm"
+import GameForm from "../components/GameForm"
 
-function HomePage() { 
+function HomePage() {
     const [matches, setMatches] = useState([])
     const [games, setGames] = useState([])
 
@@ -71,6 +73,9 @@ function HomePage() {
                         </tbody> 
                     </table>
                 </section>
+
+                <MatchForm />
+                <GameForm />
             </div>
         </>
     )   
