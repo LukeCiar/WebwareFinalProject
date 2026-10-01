@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react"
-
 //pass in all usernames to check for new achivemetns
 async function AwardAchievementsFunction({listUsernames}) { 
     // Storing an achivement in an dictionaly where key is achivement number and an achivement is a array of achivement name, description
@@ -83,15 +81,18 @@ async function AwardAchievementsFunction({listUsernames}) {
                 achievements.push("5")
             }
         }
-        if(!achievements.includes("6")) {
-            // Win first
-            if (userMatches.filter((match) => match.won == username).length >= 1) {
-                achievements.push("6")
-            }
-        }
+        // 6 and 7 are number of won games
         if(!achievements.includes("7")) {
+            const numberWonGames = userMatches.filter((match) => match.players.find(username).won == true).length
+            
+            // Win first
+            if(!achievements.includes("6")) {
+                if (numberWonGames >= 1) {
+                    achievements.push("6")
+                }
+            }
             // Win 10
-            if (userMatches.filter((match) => match.won == username).length >= 10) {
+            if (numberWonGames >= 10) {
                 achievements.push("7")
             }
         }
@@ -118,7 +119,7 @@ async function AwardAchievementsFunction({listUsernames}) {
         }
         //Win 5 different matches of the same game
         if(!achievements.includes("10")) {
-            const wonGames = userMatches.filter((match) => match.won == username)
+            const wonGames = userMatches.filter((match) => match.players.find(username).won == true)
             const gameTypes = {}
             for (const match in wonGames) {
                 if (!(match.gameName in gameTypes)) {
@@ -133,6 +134,7 @@ async function AwardAchievementsFunction({listUsernames}) {
         // send updates to server
         if (achievements.length != achivementLength) {
             // a new achivement was added so send it it
+            console.log(username, achievements)
             //TODO: update userData.achievements with the naming scheme implemented when creating users
             const userResponse = await fetch("/modifyUser", 
                 {method: "POST",
