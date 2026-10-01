@@ -37,12 +37,6 @@ function MatchForm() {
         })
 
         // Award achievements to any players that would get new ones from participating in this match
-        console.log("matchData", matchData)
-        for (const player in matchData.players) {
-            // Somehow player.name is "" in matchdata, undefined in player.name and shows up in database
-            console.log("player", player)
-            console.log("player", player.name)
-        }
         await AwardAchievementsFunction(matchData.players.map((player) => player.name))
     }
 

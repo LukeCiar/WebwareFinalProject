@@ -1,5 +1,5 @@
 //pass in all usernames to check for new achivemetns
-async function AwardAchievementsFunction({listUsernames}) { 
+async function AwardAchievementsFunction(listUsernames) { 
     // Storing an achivement in an dictionaly where key is achivement number and an achivement is a array of achivement name, description
     const LIST_OF_ACHIVEMENTS = {
         "1": ["Known Plyer", "Create an account"],
@@ -49,10 +49,10 @@ async function AwardAchievementsFunction({listUsernames}) {
     }
 
     // Go though all users in game and assign achivements to them
-    for (const username in listUsernames) {
+    for (const username of listUsernames) {
         const achievements = await fetchAchievements(username)
         const userMatches = await fetchMatches(username)
-        const achivementLength = length(achievements)
+        const achivementLength = achievements.length
 
         if(!achievements.includes("1")) {
             // Create an account
@@ -83,7 +83,12 @@ async function AwardAchievementsFunction({listUsernames}) {
         }
         // 6 and 7 are number of won games
         if(!achievements.includes("7")) {
-            const numberWonGames = userMatches.filter((match) => match.players.find(username).won == true).length
+            const numberWonGames = userMatches.filter((match) => {
+                    const self = (match.players.find((player) => player.name == username))
+                    if (self !== undefined){
+                        return (self.won)
+                    }
+                }).length
             
             // Win first
             if(!achievements.includes("6")) {
@@ -119,7 +124,13 @@ async function AwardAchievementsFunction({listUsernames}) {
         }
         //Win 5 different matches of the same game
         if(!achievements.includes("10")) {
-            const wonGames = userMatches.filter((match) => match.players.find(username).won == true)
+            const wonGames = userMatches.filter((match) => {
+                    const self = (match.players.find((player) => player.name == username))
+                    if (self !== undefined){
+                        return (self.won)
+                    }
+                })
+            
             const gameTypes = {}
             for (const match in wonGames) {
                 if (!(match.gameName in gameTypes)) {
@@ -133,17 +144,29 @@ async function AwardAchievementsFunction({listUsernames}) {
 
         // send updates to server
         if (achievements.length != achivementLength) {
-            // a new achivement was added so send it it
+            // a new achivement was added so send it if user exists
             console.log(username, achievements)
-            //TODO: update userData.achievements with the naming scheme implemented when creating users
-            const userResponse = await fetch("/modifyUser", 
+            
+            const doesUserExistResponse = await fetch("/getUserByName", 
                 {method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify( {"achievements":achievements} ) 
+                body: JSON.stringify( {username} ) 
                 }
             )
-            // I don't think we care about the response if it is not an error
-            const userData = await userResponse.json();
+            const userExists = await doesUserExistResponse.json();
+
+            if (username != null && false) {
+                //TODO: update userData.achievements with the naming scheme implemented when creating users
+                // This will currenlty just cause a crash because there is no achievements field in user, this is why all todos need to be updated once create/account exists 
+                const userResponse = await fetch("/modifyUser", 
+                    {method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify( {"achievements":achievements} ) 
+                    }
+                )
+                // I don't think we care about the response if it is not an error
+                const userData = await userResponse.json();
+            }
         }
     }
     //return
