@@ -15,18 +15,18 @@ app.use(async (req, res, next) => {
 
 app.post("/addGame", async (req, res) => {
     await db.addGame(req.body)
-    res.statusCode(201).end()
+    res.status(201).end()
 })
 
 app.get("/getGames", async (req, res) => {
     const games = await db.getAllGames()
-    res.status(200).send(games)
+    res.status(200).json(games)
 })
 
 //see the doc comment on getFilteredGames for details
 app.post("/getFilteredGames", async (req, res) => {
     const games = await db.getFilteredGames(req.body.filter)
-    res.status(200).send(games)
+    res.status(200).json(games)
 })
 
 app.post("/deleteGame", async (req, res) => {
@@ -38,18 +38,18 @@ app.post("/deleteGame", async (req, res) => {
 
 app.post("/addMatch", async (req, res) => {
     await db.addMatch(req.body)
-    res.statusCode(201).end()
+    res.status(201).end()
 })
 
 app.get("/getMatches", async (req, res) => {
     const matches = await db.getAllMatches()
-    res.status(200).send(matches)
+    res.status(200).json(matches)
 })
 
 //See the doc comment on getFilteredMatches for details
 app.post("/getFilteredMatches", async (req, res) => {
     const matches = await db.getFilteredMatches(req.body.filter)
-    res.status(200).send(matches)
+    res.status(200).json(matches)
 })
 
 //See the doc comment on modifyMatch for details
@@ -67,12 +67,12 @@ app.post("/deleteMatch", async (req, res) => {
 
 app.post("/addUser", async (req, res) => {
     await db.addUser(req.body)
-    res.statusCode(201).end()
+    res.status(201).end()
 })
 
 app.get("/getUsers", async (req, res) => {
     const users = await db.getAllUsers()
-    res.status(200).send(users)
+    res.status(200).json(users)
 })
 
 app.post("/getUserByName", async (req, res) => {

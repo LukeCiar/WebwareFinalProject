@@ -69,7 +69,7 @@ export const addMatch = async (match) => {
 }
 
 export const getAllMatches = async () => {
-    const matches = await matchCollection.find().toArray()
+    const matches = await matchCollection.find().sort({ datePlayed: 1 }).toArray()
     return matches
 }
 
