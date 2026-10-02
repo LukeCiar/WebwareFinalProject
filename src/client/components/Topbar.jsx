@@ -7,8 +7,8 @@ function Topbar({ user, setUser }) {
     }
 
     // TODO Get this data from the profile system
-    let signedIn = true;
-    let username = user.username
+    let signedIn = false;
+    let username = user ? user.username : null
 
     let profileDropdown;
     if (signedIn) {
@@ -53,7 +53,7 @@ function Topbar({ user, setUser }) {
                         <ul className="dropdown-menu dropdown-menu-end">
                             <li><Link className="dropdown-item" to="/login" hidden={signedIn}>Log In/Sign Up</Link></li>
                             <li><Link className="dropdown-item" to="/profile" hidden={!signedIn}>Profile</Link></li>
-                            <li><button className="dropdown-item" onClick={logout} hidden={!signedIn}>Log Out</Link></li>
+                            <li><button className="dropdown-item" onClick={logout} hidden={!signedIn}>Log Out</button></li>
                         </ul>
                     </span>
                 </div>
