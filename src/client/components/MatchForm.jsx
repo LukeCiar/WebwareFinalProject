@@ -76,7 +76,7 @@ function MatchForm() {
 
                 <label style={{display: "block"}}>
                     Date Played
-                    <input type="date" name="datePlayed" />
+                    <input type="date" name="datePlayed" defaultValue={new Date().toISOString().split('T')[0]} />
                 </label>
 
                 <label style={{display: "block"}}>

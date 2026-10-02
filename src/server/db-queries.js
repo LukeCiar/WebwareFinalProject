@@ -75,7 +75,8 @@ export const getAllMatches = async () => {
 
 /**
  * @param {Object} filter A filter to apply to the matches in the format { field: value }.
- * This works for array fields too - passing { players: "John" } will return matches where John is a player.
+ * For to query players, use dot notation - { players.name: "John" } will return matches where John is a player.
+ * This doesn't work for matching more than 1 field on a single player, but we can change that if needed
  * @returns The list of matches that match the given filter
  */
 export const getFilteredMatches = async (filter) => {
@@ -102,17 +103,29 @@ export const deleteMatch = async (id) => {
 //----------------Users----------------
 
 export const addUser = async (user) => {
-    userCollection.insertOne(user)
+    await userCollection.insertOne(user)
 }
 
 export const getAllUsers = async () => {
-    const users = await userCollection.find().project({_id: 0}).toArray()
+    const users = await userCollection.find().project({_id: 0, passwordHash: 0}).toArray()
     return users
 }
 
 export const getUserByName = async (username) => {
-    const user = await userCollection.findOne({username})
+    const user = await userCollection.findOne({username}, {projection: {passwordHash: 0}})
     return user
+}
+
+/**
+ * Only for authentication: unlike getUserByName, this includes the passwordHash.
+ * Never send the result to the client.
+ */
+export const getUserForAuth = async (username) => {
+    return await userCollection.findOne({username})
+}
+
+export const getUserById = async (id) => {
+    return await userCollection.findOne({ _id: new ObjectId(id) }, {projection: {passwordHash: 0}})
 }
 
 /**
@@ -125,6 +138,22 @@ export const modifyUser = async (username, update) => {
     await userCollection.updateOne(
         { username },
         { $set: update }
+    )
+}
+
+/**
+ * Changes a username, and updates the player name in every match they appear in.
+ * Throws a duplicate key error (code 11000) if the new username is taken.
+ */
+export const renameUser = async (oldUsername, newUsername) => {
+    await userCollection.updateOne(
+        { username: oldUsername },
+        { $set: { username: newUsername } }
+    )
+    await matchCollection.updateMany(
+        { "players.name": oldUsername },
+        { $set: { "players.$[p].name": newUsername } },
+        { arrayFilters: [{ "p.name": oldUsername }] }
     )
 }
 

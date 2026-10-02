@@ -1,9 +1,14 @@
 import { Link } from "react-router-dom";
 
-function Topbar() {
+function Topbar({ user, setUser }) {
+    const logout = async () => {
+        await fetch("/auth/logout", { method: "POST" })
+        setUser(null)
+    }
+
     // TODO Get this data from the profile system
     let signedIn = true;
-    let username = "Lex"
+    let username = user.username
 
     let profileDropdown;
     if (signedIn) {
@@ -48,7 +53,7 @@ function Topbar() {
                         <ul className="dropdown-menu dropdown-menu-end">
                             <li><Link className="dropdown-item" to="/login" hidden={signedIn}>Log In/Sign Up</Link></li>
                             <li><Link className="dropdown-item" to="/profile" hidden={!signedIn}>Profile</Link></li>
-                            <li><Link className="dropdown-item" to="/" hidden={!signedIn}>Log Out</Link></li> {/* TODO Add a logout link */}
+                            <li><button className="dropdown-item" onClick={logout} hidden={!signedIn}>Log Out</Link></li>
                         </ul>
                     </span>
                 </div>

@@ -1,6 +1,12 @@
 import express from "express";
 import ViteExpress from "vite-express";
 import * as db from "./db-queries.js"
+import "dotenv/config"
+import bcrypt from "bcrypt"
+import session from "express-session"
+import MongoStore from "connect-mongo"
+import passport from "passport"
+import { Strategy as LocalStrategy } from "passport-local"
 
 const app = express();
 
@@ -9,6 +15,123 @@ app.use(express.json())
 app.use(async (req, res, next) => {
     if(!db.initialized) { await db.init() }
     next()
+})
+
+//----------------Auth----------------
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 } // 1 week
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+// Local strategy: look up the username, auto-creating an account (with a
+// hashed password) the first time it's seen
+passport.use(new LocalStrategy(async (username, password, done) => {
+    try {
+        username = username.trim()
+
+        if (username === "" || !password) {
+            return done(null, false, { message: "Username and password required" })
+        }
+
+        let user = await db.getUserForAuth(username)
+        let isNew = false
+
+        if (user === null) {
+            const passwordHash = await bcrypt.hash(password, 10)
+            // Achievement "1" is "Create an account"
+            await db.addUser({ username, passwordHash, bio: "", achievements: ["1"] })
+            user = await db.getUserForAuth(username)
+            isNew = true
+        }
+        else {
+            const match = await bcrypt.compare(password, user.passwordHash)
+            if (!match) return done(null, false, { message: "Incorrect password" })
+        }
+
+        return done(null, user, { isNew })
+    }
+    catch (err) {
+        return done(err)
+    }
+}))
+
+passport.serializeUser((user, done) => done(null, user._id.toString()))
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        done(null, await db.getUserById(id))
+    }
+    catch (err) {
+        done(err)
+    }
+})
+
+app.post("/auth/login", (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+        if (err) return next(err)
+        if (!user) return res.status(401).json({ error: info?.message || "Login failed" })
+
+        req.logIn(user, (err) => {
+            if (err) return next(err)
+            res.json({ ok: true, isNew: !!info?.isNew, username: user.username })
+        })
+    })(req, res, next)
+})
+
+app.post("/auth/logout", (req, res, next) => {
+    req.logout((err) => {
+        if (err) return next(err)
+        res.json({ ok: true })
+    })
+})
+
+// Returns the logged in user (without the password hash), or 401 if signed out
+app.get("/api/me", (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ error: "Not logged in" })
+    res.json(req.user)
+})
+
+const requireAuth = (req, res, next) => {
+    if (req.isAuthenticated()) return next()
+    res.status(401).json({ error: "Not logged in" })
+}
+
+//----------------Profile (logged in user only)----------------
+
+app.post("/api/profile/bio", requireAuth, async (req, res) => {
+    const bio = String(req.body.bio ?? "").slice(0, 500)
+    await db.modifyUser(req.user.username, { bio })
+    res.json({ bio })
+})
+
+app.post("/api/profile/username", requireAuth, async (req, res) => {
+    const username = String(req.body.username ?? "").trim()
+    if (username === "") return res.status(400).json({ error: "Username required" })
+
+    try {
+        await db.renameUser(req.user.username, username)
+    }
+    catch (err) {
+        // 11000 is Mongo's duplicate key error (the unique index on username)
+        if (err.code === 11000) return res.status(409).json({ error: "That username is taken" })
+        throw err
+    }
+    res.json({ username })
+})
+
+app.post("/api/profile/password", requireAuth, async (req, res) => {
+    const password = String(req.body.password ?? "")
+    if (password === "") return res.status(400).json({ error: "Password required" })
+
+    await db.modifyUser(req.user.username, { passwordHash: await bcrypt.hash(password, 10) })
+    res.json({ ok: true })
 })
 
 //----------------Games----------------
@@ -25,7 +148,7 @@ app.get("/getGames", async (req, res) => {
 
 //see the doc comment on getFilteredGames for details
 app.post("/getFilteredGames", async (req, res) => {
-    const games = await db.getFilteredGames(req.body.filter)
+    const games = await db.getFilteredGames(req.body)
     res.status(200).json(games)
 })
 
@@ -48,7 +171,7 @@ app.get("/getMatches", async (req, res) => {
 
 //See the doc comment on getFilteredMatches for details
 app.post("/getFilteredMatches", async (req, res) => {
-    const matches = await db.getFilteredMatches(req.body.filter)
+    const matches = await db.getFilteredMatches(req.body)
     res.status(200).json(matches)
 })
 
@@ -82,14 +205,23 @@ app.post("/getUserByName", async (req, res) => {
 })
 
 //See the doc comment on modifyUser for details
-app.post("/modifyUser", async (req, res) => {
+// Users can only modify or delete their own account. Credentials, the username and
+// achievements can't be set from here (use the /api/profile endpoints instead)
+const PROTECTED_USER_FIELDS = ["_id", "username", "passwordHash", "achievements"]
+
+app.post("/modifyUser", requireAuth, async (req, res) => {
+    if (req.body.username !== req.user.username) return res.status(403).json({ error: "Not your account" })
+    if (PROTECTED_USER_FIELDS.some(f => f in (req.body.update ?? {}))) {
+        return res.status(400).json({ error: "That field can't be modified here" })
+    }
     await db.modifyUser(req.body.username, req.body.update)
     res.status(200).end()
 })
 
-app.post("/deleteUser", async (req, res) => {
+app.post("/deleteUser", requireAuth, async (req, res) => {
+    if (req.body.username !== req.user.username) return res.status(403).json({ error: "Not your account" })
     await db.deleteUser(req.body.username)
-    res.status(200).end()
+    req.logout(() => res.status(200).end())
 })
 
 //--------------------------------

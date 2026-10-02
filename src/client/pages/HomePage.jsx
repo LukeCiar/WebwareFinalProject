@@ -50,11 +50,12 @@ function HomePage() {
                         <thead>
                             <tr>
                                 <th>Game</th>
+                                <th>Date Played</th>
                                 <th>Players</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {matches.map((m) => <MatchCard key = {m._id} match={m} />)}
+                            {matches.slice(0,10).map((m) => <MatchCard key = {m._id} match={m} />)}
                         </tbody> 
                     </table>
                 </section>

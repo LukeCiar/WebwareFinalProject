@@ -1,44 +1,74 @@
 import { useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import "./LoginPage.css";
 
 function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const { setUser } = useOutletContext();
+    const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // TODO: not currently supported, no login endpoint yet
-        console.log("This function has not been finished");
-        console.log("Username:", username, "Password:", password);
+        setError("");
+
+        const response = await fetch("/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: username.trim(), password })
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            setError(data.error || "Login failed");
+            return;
+        }
+
+        // Fetch the full user so the rest of the app sees the same shape as /api/me
+        const meResponse = await fetch("/api/me");
+        setUser(meResponse.ok ? await meResponse.json() : null);
+        navigate("/");
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h1>Sign In</h1>
+        <main className="login">
+            <h1>Board Game Tracker</h1>
 
-            <label>
-                Username
-                <input
-                    type="text"
-                    value={username}
-                    onChange={(event) => setUsername(event.target.value)}
-                />
-            </label>
+            <div className="login-card">
+                <p className="login-hint">
+                    Sign in with your username and password. If the account doesn't exist yet, it will be created for you.
+                </p>
 
-            <br />
+                <form onSubmit={handleSubmit}>
+                    <div className="login-field">
+                        <label htmlFor="username">Username</label>
+                        <input
+                            id="username"
+                            type="text"
+                            required
+                            value={username}
+                            onChange={(event) => setUsername(event.target.value)}
+                        />
+                    </div>
 
-            <label>
-                Password
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                />
-            </label>
+                    <div className="login-field">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            id="password"
+                            type="password"
+                            required
+                            value={password}
+                            onChange={(event) => setPassword(event.target.value)}
+                        />
+                    </div>
 
-            <br />
+                    <button type="submit" className="login-submit">Sign In / Sign Up</button>
+                </form>
 
-            <button type="submit">Sign In</button>
-        </form>
+                {error && <p className="login-error">{error}</p>}
+            </div>
+        </main>
     )
 }
 export default LoginPage;

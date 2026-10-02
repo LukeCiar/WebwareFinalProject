@@ -40,7 +40,7 @@ function Achievements({username}) {
             }
         }
         fetchData()
-    })
+    }, [username])
 
     // Given an achivement from LIST_OF_ACHIVEMETNS and a boolean of is it completed or not draw it
     const drawAchievement = function(key, achievement, completed) {
