@@ -9,10 +9,15 @@
     "build": "vite build"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-mongo": "^6.0.0",
     "cross-env": "^7.0.3",
     "dotenv": "^18.0.4",
     "express": "^5.1.0",
+    "express-session": "^1.19.0",
     "mongodb": "^7.6.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-router-dom": "^7.18.4",

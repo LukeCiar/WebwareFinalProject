@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 
-function Topbar() {
+function Topbar({ user, setUser }) {
+    const logout = async () => {
+        await fetch("/auth/logout", { method: "POST" })
+        setUser(null)
+    }
+
     return (
         <>
             <style>{`
@@ -23,7 +28,12 @@ function Topbar() {
                 <Link to="/">Home</Link>
                 <Link to="/games">Games</Link>
                 <input type="search" placeholder="Search" />
-                <Link className="profile" to="/profile">Profile</Link>
+                {user
+                    ? <>
+                        <Link className="profile" to="/profile">Profile</Link>
+                        <button onClick={logout}>Logout</button>
+                    </>
+                    : <Link className="profile" to="/login">SignUp/SignIn</Link>}
             </nav>
         </>
     )
