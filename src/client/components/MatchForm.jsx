@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import AwardAchievementsFunction from "./AwardAchievementsFunction"
 
 function MatchForm() {
     const [allGames, setAllGames] = useState([])
@@ -34,6 +35,9 @@ function MatchForm() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(matchData)
         })
+
+        // Award achievements to any players that would get new ones from participating in this match
+        await AwardAchievementsFunction(matchData.players.map((player) => player.name))
     }
 
     return (
