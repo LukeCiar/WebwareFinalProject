@@ -43,7 +43,6 @@ function HomePage() {
                     padding: .5rem;
                 }
             `} </style>
-            <h1>Welcome!</h1>
             <div id = "homeBody">
                 <section>
                     <h2>Recent Matches</h2>
