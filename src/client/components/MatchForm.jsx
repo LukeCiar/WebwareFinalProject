@@ -88,7 +88,7 @@ function MatchForm() {
                     <textarea name="notes"></textarea>
                 </label>
 
-                <input type="submit" value="Submit Match" />
+                <input type="submit" className="btn btn-primary" value="Submit Match" />
 
             </form>
         </>
