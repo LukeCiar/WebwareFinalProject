@@ -1,22 +1,6 @@
 //pass in all usernames to check for new achivemetns
 async function AwardAchievementsFunction(listUsernames) { 
-    // Storing an achivement in an dictionaly where key is achivement number and an achivement is a array of achivement name, description
-    const LIST_OF_ACHIVEMENTS = {
-        "1": ["Known Plyer", "Create an account"],
-        "2": ["Starting out", "Play your first game"],
-        "3": ["Getting into it", "Participate in 5 matches"],
-        "4": ["Player of games", "Participate in 10 matches"],
-        "5": ["Veteran Boardgamer", "Participate in 50 or more matches"],
-        "6": ["Winner!", "Win your first game"],
-        "7": ["Deus ex Machina", "Win 10 or more matches"],
-        "8": ["Explorer", "Play 3 different types of games"],
-        "9": ["Jack of all trades", "Play 10 or more different types of games"],
-        "10": ["Dedication", "Win 5 different matches of the same game"]
-    }
 
-    // testing
-    console.log("usernames", listUsernames)
-    
     // Function to get Achievements for a user
     const fetchAchievements = async (username) => {
         const userResponse = await fetch("/getUserByName", 
@@ -27,7 +11,6 @@ async function AwardAchievementsFunction(listUsernames) {
         )
         const userData = await userResponse.json();
         if (userData != null) {
-            //TODO: update userData.achievements with the naming scheme implemented when creating users
             if (userData.achievements != null) {
                 return(userData.achievements)
             }
@@ -41,7 +24,7 @@ async function AwardAchievementsFunction(listUsernames) {
         const userResponse = await fetch("/getFilteredMatches", 
             {method: "POST",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify( {players:username} ) 
+            body: JSON.stringify( {"players.name":username} ) 
             }
         )
         const userData = await userResponse.json();
@@ -51,8 +34,8 @@ async function AwardAchievementsFunction(listUsernames) {
     // Go though all users in game and assign achivements to them
     for (const username of listUsernames) {
         const achievements = await fetchAchievements(username)
-        console.log("achivements", achievements)
         const userMatches = await fetchMatches(username)
+        // Currently this returns all matches not just matches for that user
         console.log("userMatches", userMatches)
         const achivementLength = achievements.length
 
@@ -158,16 +141,12 @@ async function AwardAchievementsFunction(listUsernames) {
             const userExists = await doesUserExistResponse.json();
 
             if (userExists != null) {
-                //TODO: update userData.achievements with the naming scheme implemented when creating users
-                // This will currenlty just cause a crash because there is no achievements field in user, this is why all todos need to be updated once create/account exists 
                 const userResponse = await fetch("/modifyUser", 
                     {method: "POST",
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify( {"achievements":achievements} ) 
+                    body: JSON.stringify( {"username":username, "update":{"achievements":achievements} } ) 
                     }
                 )
-                // I don't think we care about the response if it is not an error
-                const userData = await userResponse.json();
             }
         }
     }

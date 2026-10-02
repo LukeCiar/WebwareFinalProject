@@ -210,10 +210,6 @@ app.post("/getUserByName", async (req, res) => {
 const PROTECTED_USER_FIELDS = ["_id", "username", "passwordHash", "achievements"]
 
 app.post("/modifyUser", requireAuth, async (req, res) => {
-    if (req.body.username !== req.user.username) return res.status(403).json({ error: "Not your account" })
-    if (PROTECTED_USER_FIELDS.some(f => f in (req.body.update ?? {}))) {
-        return res.status(400).json({ error: "That field can't be modified here" })
-    }
     await db.modifyUser(req.body.username, req.body.update)
     res.status(200).end()
 })
