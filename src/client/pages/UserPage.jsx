@@ -5,6 +5,7 @@ import Achievements from "../components/Achievements"
 
 function UserPage() { 
     const { username } = useParams();
+    const [userExists, setUserExists] = useState(false);
     // Given username get the profilePicture, bio, and achivements list from server
     const profilePicture = "none";
     const [bio, setBio] = useState("");
@@ -19,6 +20,7 @@ function UserPage() {
             })
             const user = await response.json()
             setBio(user?.bio ?? "")
+            setUserExists(user == null)
         }
         fetchUser()
     }, [username])
@@ -26,15 +28,22 @@ function UserPage() {
     return (
         <>  
             <img src={profilePicture} alt={username+"'s profile picture"} />
-            <h1>
-                {username}
-            </h1>
-            <p> 
-                {bio}
-            </p>
-
-            <h2> Achivements: </h2>
-            { <Achievements username={username} /> }
+            {userExists ? 
+                <h1>
+                    {username+" (No account created)"}
+                </h1>
+                :
+                <>
+                    <h1>
+                        {username}
+                    </h1>
+                    <p> 
+                        {bio}
+                    </p>
+                    <h2> Achivements: </h2>
+                    <Achievements username={username} />
+                </>
+            }
 
             <h2> Recently Played Games: </h2>
             {/*
