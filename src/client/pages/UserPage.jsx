@@ -7,7 +7,7 @@ function UserPage() {
     const { username } = useParams();
     const [userExists, setUserExists] = useState(false);
     // Given username get the profilePicture, bio, and achivements list from server
-    const profilePicture = "none";
+    const [profilePicture, setProfilePicture] = useState("");
     const [bio, setBio] = useState("");
     const achivements = [];
 
@@ -19,7 +19,10 @@ function UserPage() {
                 body: JSON.stringify({ username })
             })
             const user = await response.json()
+            console.log("user", user)
             setBio(user?.bio ?? "")
+            setProfilePicture(user?.profilePicture ?? "")
+            console.log("profilePicture", profilePicture)
             setUserExists(user == null)
         }
         fetchUser()
@@ -28,10 +31,10 @@ function UserPage() {
     return (
         <>  
             <div style = {{backgroundColor: "#dc3545", width:"50px"}}>
-                {profilePicture ? 
+                {profilePicture == "" ? 
                 <img src="../../../profilePictures/default.png" alt="default profile picture" width="50" height="100"/>
                 :
-                <img src={profilePicture} alt={username+"'s profile picture"} width="50" height="100" />    
+                <img src={"../../../profilePictures/"+profilePicture+".png"} alt={username+"'s profile picture"} width="50" height="100" />    
                 }
             </div>
             
