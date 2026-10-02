@@ -75,7 +75,8 @@ export const getAllMatches = async () => {
 
 /**
  * @param {Object} filter A filter to apply to the matches in the format { field: value }.
- * This works for array fields too - passing { players: "John" } will return matches where John is a player.
+ * For to query players, use dot notation - { players.name: "John" } will return matches where John is a player.
+ * This doesn't work for matching more than 1 field on a single player, but we can change that if needed
  * @returns The list of matches that match the given filter
  */
 export const getFilteredMatches = async (filter) => {
