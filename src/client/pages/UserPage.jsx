@@ -27,7 +27,14 @@ function UserPage() {
 
     return (
         <>  
-            <img src={profilePicture} alt={username+"'s profile picture"} />
+            <div style = {{backgroundColor: "#dc3545", width:"50px"}}>
+                {profilePicture ? 
+                <img src="../../../profilePictures/default.png" alt="default profile picture" width="50" height="100"/>
+                :
+                <img src={profilePicture} alt={username+"'s profile picture"} width="50" height="100" />    
+                }
+            </div>
+            
             {userExists ? 
                 <h1>
                     {username+" (No account created)"}
