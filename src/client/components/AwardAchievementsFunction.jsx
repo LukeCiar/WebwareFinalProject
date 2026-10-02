@@ -41,7 +41,7 @@ async function AwardAchievementsFunction(listUsernames) {
         const userResponse = await fetch("/getFilteredMatches", 
             {method: "POST",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify( {"username":username} ) 
+            body: JSON.stringify( {players:username} ) 
             }
         )
         const userData = await userResponse.json();
@@ -51,7 +51,9 @@ async function AwardAchievementsFunction(listUsernames) {
     // Go though all users in game and assign achivements to them
     for (const username of listUsernames) {
         const achievements = await fetchAchievements(username)
+        console.log("achivements", achievements)
         const userMatches = await fetchMatches(username)
+        console.log("userMatches", userMatches)
         const achivementLength = achievements.length
 
         if(!achievements.includes("1")) {
@@ -155,7 +157,7 @@ async function AwardAchievementsFunction(listUsernames) {
             )
             const userExists = await doesUserExistResponse.json();
 
-            if (username != null && false) {
+            if (userExists != null) {
                 //TODO: update userData.achievements with the naming scheme implemented when creating users
                 // This will currenlty just cause a crash because there is no achievements field in user, this is why all todos need to be updated once create/account exists 
                 const userResponse = await fetch("/modifyUser", 
