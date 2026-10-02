@@ -20,13 +20,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
           <Route path="games" element={<GamePage />} />
-          <Route path="home" element={<HomePage />} />
           <Route path="login" element={<LoginPage />} />
-          <Route path="matches" element={<MatchPage />} />
           <Route path="profile" element={<ProfilePage />} />
 
           <Route path="game/:gameName" element={<GamePage />} />
-          <Route path="game/:gameName/match/:matchId" element={<MatchPage />} />
+          <Route path="match/:matchId" element={<MatchPage />} />
           <Route path="user/:username" element={<UserPage />} />
         </Route>
       </Routes>

@@ -148,7 +148,7 @@ app.get("/getGames", async (req, res) => {
 
 //see the doc comment on getFilteredGames for details
 app.post("/getFilteredGames", async (req, res) => {
-    const games = await db.getFilteredGames(req.body.filter)
+    const games = await db.getFilteredGames(req.body)
     res.status(200).json(games)
 })
 
@@ -171,7 +171,7 @@ app.get("/getMatches", async (req, res) => {
 
 //See the doc comment on getFilteredMatches for details
 app.post("/getFilteredMatches", async (req, res) => {
-    const matches = await db.getFilteredMatches(req.body.filter)
+    const matches = await db.getFilteredMatches(req.body)
     res.status(200).json(matches)
 })
 
