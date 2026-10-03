@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
+import ProfilePicture from "../components/profilePicture"
 
 // Values for what "page" to display: the default one or one that lets you edit something
 const NO_CHANGES = 0;
@@ -19,7 +20,6 @@ function ProfilePage() {
     const { user, setUser, userLoaded } = useOutletContext();
 
     // Get profilePicture and achivements list from server from currently logged in person
-    const profilePicture = "none";
     //const bio = "Some text about me...";
     const achivements = [];
 
@@ -27,11 +27,13 @@ function ProfilePage() {
     const [bioDraft, setBioDraft] = useState("");
     const [newUsername, setNewUsername] = useState("");
     const [newPassword, setNewPassword] = useState("");
+    const [newProfilePicture, setNewProfilePicture] = useState(null);
     const [error, setError] = useState("");
 
     // Wait until we know whether anyone is logged in before redirecting
     if (!userLoaded) return null;
     if (user === null) return <Navigate to="/login" replace />;
+
 
     const stopEditing = () => {
         setChangeSettings(NO_CHANGES);
@@ -66,12 +68,39 @@ function ProfilePage() {
 
     const changePassword = () => save("/api/profile/password", { password: newPassword },
         () => setNewPassword(""));
+    
+    const changeProfilePicture = async function () {
+        if (user != null) {
+            const userResponse = await fetch("/modifyUser", 
+                {method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify( {"username":user.username, "update":{"profilePicture":newProfilePicture} } ) 
+                }
+            )   
+            stopEditing()    
+        }
+    }
+
+    const profilePictureOptions = (() => {
+        const radioButtons = []
+        const profilePictures = ["default", "demon", "blackPawn", "blackRook", "blackKnight", "blackBishop", "blackQueen", "blackKing"]
+        for (const picture of profilePictures) {
+            radioButtons.push(
+            <label htmlFor={picture} key={picture}>
+                <input type="radio" id={picture} name="profilePictureButton" value={picture} onChange={(event) => setNewProfilePicture(event.target.value)} />
+                <ProfilePicture name={picture} alttext={picture}/>
+            </label>
+        )}
+        return(radioButtons)
+    })
 
     const popupManager = () => {
         if (changeSettings == CHANGE_PROFILEPICTURE) {
             return (
                 <>
-                    <p>Select a new Profile Picutre (currently unsupported)</p>
+                    {profilePictureOptions()}
+                    <button onClick={stopEditing}>Cancel</button>
+                    <button onClick={changeProfilePicture}>Submit</button>
                 </>
             )
         }
@@ -131,7 +160,11 @@ function ProfilePage() {
     return (
         <>
             <button onClick={() => setChangeSettings(CHANGE_PROFILEPICTURE)}>
-                <img src={profilePicture} alt={user.username+"'s profile picture"} />
+                {user == null ?
+                <ProfilePicture name={""} alttext={""}/>
+                :
+                <ProfilePicture name={user.profilePicture} alttext={user.username+"'s profile picture showing a "+user.profilePicture}/>
+                }
             </button>
             <button onClick={() => setChangeSettings(CHANGE_USERNAME)}>
                 <h1>
