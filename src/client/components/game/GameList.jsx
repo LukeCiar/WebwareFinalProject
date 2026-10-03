@@ -19,8 +19,11 @@ function GameList() {
             <table>
                 <thead>
                     <tr>
+                        <th>Image</th>
                         <th>Game</th>
                         <th>Description</th>
+                        <th>Tags</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
