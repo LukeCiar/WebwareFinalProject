@@ -135,10 +135,11 @@ export const getUserById = async (id) => {
  */
 export const modifyUser = async (username, update) => {
     //TODO: update references to this user too?
-    await userCollection.updateOne(
+    const toPrint = await userCollection.updateOne(
         { username },
         { $set: update }
     )
+    console.log("response:", toPrint)
 }
 
 /**

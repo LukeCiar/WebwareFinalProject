@@ -19,7 +19,6 @@ function ProfilePage() {
     const { user, setUser, userLoaded } = useOutletContext();
 
     // Get profilePicture and achivements list from server from currently logged in person
-    const [profilePicture, setProfilePicture] = useState("");
     //const bio = "Some text about me...";
     const achivements = [];
 
@@ -71,11 +70,12 @@ function ProfilePage() {
     
     const changeProfilePicture = async function () {
         if (user != null) {
+            console.log("user", user)
             console.log("supposed to change to", newProfilePicture)
             const userResponse = await fetch("/modifyUser", 
                 {method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify( {"username":user, "update":{"profilePicture":newProfilePicture} } ) 
+                body: JSON.stringify( {"username":user.username, "update":{"profilePicture":newProfilePicture} } ) 
                 }
             )   
             console.log("response:", userResponse)
@@ -164,10 +164,10 @@ function ProfilePage() {
         <>
             <button onClick={() => setChangeSettings(CHANGE_PROFILEPICTURE)}>
                 <div style = {{backgroundColor: "#dc3545", width:"50px"}}>
-                    {profilePicture == "" ? 
+                    {(user == null || user.profilePicture == null || user.profilePicture == "" ) ? 
                     <img src="../../../profilePictures/default.png" alt="default profile picture" width="50" height="100"/>
                     :
-                    <img src={"../../../profilePictures/"+profilePicture+".png"} alt={user+"'s profile picture"} width="50" height="100" />    
+                    <img src={"../../../profilePictures/"+user.profilePicture+".png"} alt={user.username+"'s profile picture"} width="50" height="100" />    
                     }
                 </div>
             </button>
