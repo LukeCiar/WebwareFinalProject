@@ -1,4 +1,4 @@
-function ProfilePicture({name, alttext}) {
+function ProfilePicture({name, alttext, width="50px", height="100px"}) {
     if (name == null || name == "") {
         name = "default"
     }
@@ -6,8 +6,8 @@ function ProfilePicture({name, alttext}) {
         alttext = "Profile Picture"
     }
     return (
-        <div style = {{backgroundColor: "#dc3545", width:"50px", height:"100px", position:"relative"}}>
-            <img style = {{position:"relative"}} src={"../../../profilePictures/"+name+".png"} alt={alttext} width="50" height="100"/>
+        <div style = {{backgroundColor: "#dc3545", width:`${width}`, height:`${height}`, className:"d-inline-block align-items-center rounded me-2"}}>
+            <img style = {{position:"relative"}} src={"../../../profilePictures/"+name+".png"} alt={alttext} width={width} height={height}/>
         </div>
     )
 }

@@ -83,7 +83,7 @@ function ProfilePage() {
 
     const profilePictureOptions = (() => {
         const radioButtons = []
-        const profilePictures = ["default", "demon", "blackPawn", "blackRook", "blackKnight", "blackBishop", "blackQueen", "blackKing"]
+        const profilePictures = ["default", "demon", "blackPawn", "blackRook", "blackKnight", "blackBishop", "blackQueen", "blackKing", "loveGames"]
         for (const picture of profilePictures) {
             radioButtons.push(
             <label htmlFor={picture} key={picture}>

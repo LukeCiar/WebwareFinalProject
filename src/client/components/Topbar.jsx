@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ProfilePicture from "../components/profilePicture"
 
 function Topbar({ user, setUser }) {
     const logout = async () => {
@@ -7,13 +8,14 @@ function Topbar({ user, setUser }) {
     }
 
     // TODO Get this data from the profile system
-    let signedIn = false;
+    // If user == null you are not signed in or loaded so use that instead of signedIn
+    //let siignedIn = false;
     let username = user ? user.username : null
 
     let profileDropdown;
-    if (signedIn) {
+    if ((user != null)) {
         profileDropdown = (<>
-            <img src="/profile_pictures/test_pfp.png" alt="profile picture" width="40px" height="40px" className="d-inline-block align-items-center rounded me-2"/>
+            <ProfilePicture name={user.profilePicture} alttext={user.username+"'s profile picture"} width={"40px"} height={"40px"}/>
             {username}
         </>)
     } else {
@@ -51,9 +53,9 @@ function Topbar({ user, setUser }) {
                             {profileDropdown}
                         </a>
                         <ul className="dropdown-menu dropdown-menu-end">
-                            <li><Link className="dropdown-item" to="/login" hidden={signedIn}>Log In/Sign Up</Link></li>
-                            <li><Link className="dropdown-item" to="/profile" hidden={!signedIn}>Profile</Link></li>
-                            <li><button className="dropdown-item" onClick={logout} hidden={!signedIn}>Log Out</button></li>
+                            <li><Link className="dropdown-item" to="/login" hidden={(user != null)}>Log In/Sign Up</Link></li>
+                            <li><Link className="dropdown-item" to="/profile" hidden={!(user != null)}>Profile</Link></li>
+                            <li><button className="dropdown-item" onClick={logout} hidden={!(user != null)}>Log Out</button></li>
                         </ul>
                     </span>
                 </div>
