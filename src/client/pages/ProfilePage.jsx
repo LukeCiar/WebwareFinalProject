@@ -71,15 +71,12 @@ function ProfilePage() {
     
     const changeProfilePicture = async function () {
         if (user != null) {
-            console.log("user", user)
-            console.log("supposed to change to", newProfilePicture)
             const userResponse = await fetch("/modifyUser", 
                 {method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify( {"username":user.username, "update":{"profilePicture":newProfilePicture} } ) 
                 }
-            )   
-            console.log("response:", userResponse)
+            )       
         }
     }
 

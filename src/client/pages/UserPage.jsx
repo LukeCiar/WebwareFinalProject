@@ -20,10 +20,8 @@ function UserPage() {
                 body: JSON.stringify({ username })
             })
             const user = await response.json()
-            console.log("user", user)
             setBio(user?.bio ?? "")
             setProfilePicture(user?.profilePicture ?? "")
-            console.log("profilePicture", profilePicture)
             setUserExists(user == null)
         }
         fetchUser()
