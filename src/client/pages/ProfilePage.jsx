@@ -76,7 +76,8 @@ function ProfilePage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify( {"username":user.username, "update":{"profilePicture":newProfilePicture} } ) 
                 }
-            )       
+            )   
+            stopEditing()    
         }
     }
 
