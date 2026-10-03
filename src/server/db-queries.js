@@ -75,12 +75,12 @@ export const getAllMatches = async () => {
 
 /**
  * @param {Object} filter A filter to apply to the matches in the format { field: value }.
- * For to query players, use dot notation - { players.name: "John" } will return matches where John is a player.
+ * To query players, use dot notation - { players.name: "John" } will return matches where John is a player.
  * This doesn't work for matching more than 1 field on a single player, but we can change that if needed
  * @returns The list of matches that match the given filter
  */
 export const getFilteredMatches = async (filter) => {
-    const matches = await matchCollection.find(filter).toArray()
+    const matches = await matchCollection.find(filter).sort({ datePlayed: 1 }).toArray()
     return matches
 }
 
