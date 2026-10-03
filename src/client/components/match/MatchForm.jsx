@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import AwardAchievementsFunction from "./AwardAchievementsFunction"
+import AwardAchievementsFunction from "../AwardAchievementsFunction"
 
 function MatchForm() {
     const [allGames, setAllGames] = useState([])

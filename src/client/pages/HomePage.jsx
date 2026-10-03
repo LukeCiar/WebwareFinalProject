@@ -1,24 +1,19 @@
 import { useState, useEffect } from "react"
-import MatchCard from "../components/MatchCard"
-import GameCard from "../components/GameCard"
-import MatchForm from "../components/MatchForm"
-import GameForm from "../components/GameForm"
+import MatchList from "../components/match/MatchList"
+import GameList from "../components/game/GameList"
+import MatchForm from "../components/match/MatchForm"
+import GameForm from "../components/game/GameForm"
 
 function HomePage() {
     const [matches, setMatches] = useState([])
-    const [games, setGames] = useState([])
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchMatches = async () => {
             const mResponse = await fetch("/getMatches", {method: "GET"})
             const mData = await mResponse.json()
             setMatches(mData)
-
-            const gResponse = await fetch("/getGames", {method: "GET"})
-            const gData = await gResponse.json()
-            setGames(gData)
         }
-        fetchData()
+        fetchMatches()
     }, [])
 
     return (
@@ -44,36 +39,8 @@ function HomePage() {
                 }
             `} </style>
             <div id = "homeBody">
-                <section>
-                    <h2>Recent Matches</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Game</th>
-                                <th>Date Played</th>
-                                <th>Players</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {matches.slice(0,10).map((m) => <MatchCard key = {m._id} match={m} />)}
-                        </tbody> 
-                    </table>
-                </section>
-                <section>
-                    <h2>Popular Games</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Game</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {games.map((g) => <GameCard key = {g._id} game={g} />)}
-                        </tbody> 
-                    </table>
-                </section>
-
+                <MatchList matches={matches.slice(0,10)} />
+                <GameList />
                 <MatchForm />
                 <GameForm />
             </div>

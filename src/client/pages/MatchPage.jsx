@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import UserCard from "../components/UserCard.jsx";
 
 function MatchPage() {

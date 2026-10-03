@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import MatchCard from "../components/MatchCard.jsx";
+import MatchCard from "../components/match/MatchCard.jsx";
 
 function GamePage() {
     const gameName = useParams().gameName;

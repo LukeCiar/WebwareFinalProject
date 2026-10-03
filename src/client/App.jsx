@@ -20,7 +20,9 @@ function App() {
   return (
     <>
       <Topbar user={user} setUser={setUser} />
-      <Outlet context={{ user, setUser, userLoaded }} />
+      <div style={{paddingTop: "80px"}}> {/* Need this to prevent topbar from covering page content */}
+        <Outlet context={{ user, setUser, userLoaded }} />
+      </div>
     </>
   );
 }
