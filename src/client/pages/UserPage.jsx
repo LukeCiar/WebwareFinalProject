@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react"
 import {useParams} from "react-router-dom"
 import Achievements from "../components/Achievements"
+import ProfilePicture from "../components/profilePicture"
 
 function UserPage() { 
     const { username } = useParams();
@@ -30,13 +31,7 @@ function UserPage() {
 
     return (
         <>  
-            <div style = {{backgroundColor: "#dc3545", width:"50px"}}>
-                {profilePicture == "" ? 
-                <img src="../../../profilePictures/default.png" alt="default profile picture" width="50" height="100"/>
-                :
-                <img src={"../../../profilePictures/"+profilePicture+".png"} alt={username+"'s profile picture"} width="50" height="100" />    
-                }
-            </div>
+            <ProfilePicture name={profilePicture} alttext={username+"'s profile picture showing a "+profilePicture}/>
             
             {userExists ? 
                 <h1>

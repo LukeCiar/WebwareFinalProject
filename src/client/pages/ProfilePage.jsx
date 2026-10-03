@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
+import ProfilePicture from "../components/profilePicture"
 
 // Values for what "page" to display: the default one or one that lets you edit something
 const NO_CHANGES = 0;
@@ -89,9 +90,7 @@ function ProfilePage() {
             radioButtons.push(
             <label htmlFor={picture} key={picture}>
                 <input type="radio" id={picture} name="profilePictureButton" value={picture} onChange={(event) => setNewProfilePicture(event.target.value)} />
-                <div style = {{backgroundColor: "#dc3545", width:"50px"}}>
-                    <img src={"../../../profilePictures/"+picture+".png"} alt={picture} width="50" height="100" />
-                </div>
+                <ProfilePicture name={picture} alttext={picture}/>
             </label>
         )}
         return(radioButtons)
@@ -163,13 +162,11 @@ function ProfilePage() {
     return (
         <>
             <button onClick={() => setChangeSettings(CHANGE_PROFILEPICTURE)}>
-                <div style = {{backgroundColor: "#dc3545", width:"50px"}}>
-                    {(user == null || user.profilePicture == null || user.profilePicture == "" ) ? 
-                    <img src="../../../profilePictures/default.png" alt="default profile picture" width="50" height="100"/>
-                    :
-                    <img src={"../../../profilePictures/"+user.profilePicture+".png"} alt={user.username+"'s profile picture"} width="50" height="100" />    
-                    }
-                </div>
+                {user == null ?
+                <ProfilePicture name={""} alttext={""}/>
+                :
+                <ProfilePicture name={user.profilePicture} alttext={user.username+"'s profile picture showing a "+user.profilePicture}/>
+                }
             </button>
             <button onClick={() => setChangeSettings(CHANGE_USERNAME)}>
                 <h1>
