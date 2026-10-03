@@ -4,7 +4,7 @@ function GameCard({ game }) {
     return (
         <tr>
             <td><img 
-                    src={ game.image ? `public/gamePictures/${game.image}` : "public/game-missing-image.png" }
+                    src={ game.image ? `/gamePictures/${game.image}` : "/game-missing-image.png" }
                     alt={ `Picture of ${game.name}` }
                     height="100px" width="100px"
             /></td>

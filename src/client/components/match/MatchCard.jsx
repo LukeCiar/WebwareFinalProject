@@ -6,6 +6,7 @@ function MatchCard({ match }) {
             <td>{match.gameName}</td>
             <td>{match.datePlayed}</td>
             <td>{match.players.map(p => `${p.name} ${p.won ? "(Won)" : ""}`).join(", ")}</td>
+            <td>{match.notes}</td>
             <td><Link to={`/match/${match._id}`}>Details</Link></td>
         </tr>
     )

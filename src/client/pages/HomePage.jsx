@@ -22,7 +22,8 @@ function HomePage() {
                 #homeBody {
                     display: grid;
                     grid-template-columns: 1fr 1fr;
-                    gap: 4rem;
+                    gap: 2rem;
+                    padding: 1rem;
                 }
 
                 section {
@@ -31,16 +32,16 @@ function HomePage() {
                     flex-direction: column;
                     justify-content: center;
                 }
-
-                table, th, td {
-                    border-collapse: collapse;
-                    border: 1px solid white;
-                    padding: .5rem;
-                }
             `} </style>
             <div id = "homeBody">
-                <MatchList matches={matches.slice(0,10)} />
-                <GameList />
+                <section>
+                    <h2>Recent Matches</h2>
+                    <MatchList matches={matches.slice(0,10)} />
+                </section>
+                <section>
+                    <h2>Popular Games</h2>
+                    <GameList />
+                </section>
                 <MatchForm />
                 <GameForm />
             </div>

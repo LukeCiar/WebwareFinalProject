@@ -80,7 +80,7 @@ export const getAllMatches = async () => {
  * @returns The list of matches that match the given filter
  */
 export const getFilteredMatches = async (filter) => {
-    const matches = await matchCollection.find(filter).toArray()
+    const matches = await matchCollection.find(filter).sort({ datePlayed: 1 }).toArray()
     return matches
 }
 
