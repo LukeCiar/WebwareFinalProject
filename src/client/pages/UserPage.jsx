@@ -30,7 +30,6 @@ function UserPage() {
 
     const [matches, setMatches] = useState([])
     useEffect(() => {
-        console.log("user", username)
         const fetchMatches = async () => {
             const mResponse = await fetch("/getFilteredMatches", {
                 method: "POST",
@@ -38,7 +37,6 @@ function UserPage() {
                 body: JSON.stringify({"players.name": username})
             })
             const mData = await mResponse.json()
-            console.log("data: ", mData)
             setMatches(mData)
         }
         fetchMatches()
