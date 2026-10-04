@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
-import ProfilePicture from "../components/profilePicture"
+import Achievements from "../components/Achievements";
+import ProfilePicture from "../components/profilePicture";
+import MatchList from "../components/match/MatchList";
 
 // Values for what "page" to display: the default one or one that lets you edit something
 const NO_CHANGES = 0;
@@ -29,11 +31,27 @@ function ProfilePage() {
     const [newPassword, setNewPassword] = useState("");
     const [newProfilePicture, setNewProfilePicture] = useState(null);
     const [error, setError] = useState("");
+    const [matches, setMatches] = useState([])
+    
+    useEffect(() => {
+        if (user != null) {
+            const fetchMatches = async () => {
+                const mResponse = await fetch("/getFilteredMatches", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({"players.name": user.username})
+                })
+                const mData = await mResponse.json()
+                setMatches(mData)
+            }
+            fetchMatches()
+        }
+    }, [user])
+
 
     // Wait until we know whether anyone is logged in before redirecting
     if (!userLoaded) return null;
     if (user === null) return <Navigate to="/login" replace />;
-
 
     const stopEditing = () => {
         setChangeSettings(NO_CHANGES);
@@ -143,15 +161,15 @@ function ProfilePage() {
                         </p>
                     </button>
 
-                    <h2> Achievements: </h2>
-                    {/*
-                        Mimic User page here
-                    */}
+                    <section>
+                        <h2> Achivements: </h2>
+                        <Achievements username={user.username} />
+                    </section>
 
-                    <h2> Recently Played Games: </h2>
-                    {/*
-                        Mimic user page here
-                    */}
+                    <section>
+                        <h2> Recently Played Games: </h2>
+                        <MatchList matches={matches} />
+                    </section>
                 </>
             )
         }

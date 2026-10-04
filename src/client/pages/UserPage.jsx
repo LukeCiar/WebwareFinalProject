@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import {useParams} from "react-router-dom"
 import Achievements from "../components/Achievements"
 import ProfilePicture from "../components/profilePicture"
+import MatchList from "../components/match/MatchList"
 
 function UserPage() { 
     const { username } = useParams();
@@ -27,31 +28,47 @@ function UserPage() {
         fetchUser()
     }, [username])
 
+    const [matches, setMatches] = useState([])
+    useEffect(() => {
+        const fetchMatches = async () => {
+            const mResponse = await fetch("/getFilteredMatches", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({"players.name": username})
+            })
+            const mData = await mResponse.json()
+            setMatches(mData)
+        }
+        fetchMatches()
+    }, [])
+
     return (
         <>  
             <ProfilePicture name={profilePicture} alttext={username+"'s profile picture showing a "+profilePicture}/>
             
-            {userExists ? 
-                <h1>
-                    {username+" (No account created)"}
-                </h1>
-                :
-                <>
+            <section>
+                {userExists ? 
                     <h1>
-                        {username}
+                        {username+" (No account created)"}
                     </h1>
-                    <p> 
-                        {bio}
-                    </p>
-                    <h2> Achivements: </h2>
-                    <Achievements username={username} />
-                </>
-            }
-
-            <h2> Recently Played Games: </h2>
-            {/*
-                I am not sure if we want to implement this or not but it was something we mentioned possibly doing
-            */}
+                    :
+                    <>
+                        <h1>
+                            {username}
+                        </h1>
+                        <p> 
+                            {bio}
+                        </p>
+                        <h2> Achivements: </h2>
+                        <Achievements username={username} />
+                    </>
+                }
+            </section>
+            
+            <section>
+                <h2> Recently Played Games: </h2>
+                <MatchList matches={matches} />
+            </section>
         </>
     )   
 }

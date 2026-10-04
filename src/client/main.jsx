@@ -12,6 +12,7 @@ import LoginPage from "./pages/LoginPage";
 import MatchPage from "./pages/MatchPage";
 import ProfilePage from "./pages/ProfilePage";
 import UserPage from "./pages/UserPage";
+import AllGamesPage from "./pages/AllGamesPage"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -24,6 +25,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="profile" element={<ProfilePage />} />
 
           <Route path="game/:gameName" element={<GamePage />} />
+          <Route path="allgames" element={<AllGamesPage />} />
+
           <Route path="match/:matchId" element={<MatchPage />} />
           <Route path="user/:username" element={<UserPage />} />
         </Route>
