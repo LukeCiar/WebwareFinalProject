@@ -1,8 +1,8 @@
 function ProfilePicture({name, alttext, width="50px", height="100px"}) {
-    if (name == null || name == "") {
+    if (name == null || name == "none" || name == "") {
         name = "default"
     }
-    if (alttext == null || alttext == "") {
+    if (alttext == null || name == "none" || alttext == "") {
         alttext = "Profile Picture"
     }
     return (

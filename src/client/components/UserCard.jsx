@@ -1,7 +1,10 @@
+import ProfilePicture from "./profilePicture"
+
 function UserCard({user, winner = false}) {
+    console.log(user.profilePicture)
     return (
         <tr>
-            <td><img src={user.profilePicture} alt={user.username+"'s profile picture"} /></td>
+            <td><ProfilePicture name={user.profilePicture} alttext={user.username+"'s profile picture"} width="50px" height="50px"/></td>
             <td>{user.username}</td>
             <td>{winner && ("Winner")}</td>
         </tr>

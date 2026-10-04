@@ -11,6 +11,7 @@ import { Strategy as LocalStrategy } from "passport-local"
 const app = express();
 
 app.use(express.json())
+app.use(express.static("public"))
 
 app.use(async (req, res, next) => {
     if(!db.initialized) { await db.init() }

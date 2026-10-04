@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import UserCard from "../components/UserCard.jsx";
 
 function MatchPage() {
@@ -18,9 +18,13 @@ function MatchPage() {
             <h1>Match {matchId} of {gameName}</h1>
 
             <h2> Players: </h2>
-            {players.map(user => (
-                <UserCard user={user} winner={user.username === winner} />
-            ))}
+            <table>
+                <tbody>
+                    {players.map(user => (
+                        <UserCard key={user.username} user={user} winner={user.username === winner} />
+                    ))}
+                </tbody>
+            </table>
 
             <h2>Notes:</h2>
             {notes}
