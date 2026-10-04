@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import AwardAchievementsFunction from "../AwardAchievementsFunction"
 
-function MatchForm() {
+function MatchForm({onSubmit}) {
     const [allGames, setAllGames] = useState([])
     const [numPlayers, setNumPlayers] = useState(1)
 
@@ -38,6 +38,8 @@ function MatchForm() {
 
         // Award achievements to any players that would get new ones from participating in this match
         await AwardAchievementsFunction(matchData.players.map((player) => player.name))
+
+        onSubmit() //prop from the caller - currently used to refresh the list on the home page
     }
 
     return (

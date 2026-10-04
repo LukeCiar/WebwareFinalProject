@@ -6,6 +6,9 @@ import GameForm from "../components/game/GameForm"
 
 function HomePage() {
     const [matches, setMatches] = useState([])
+    const [games, setGames] = useState([])
+    const [reloadMatches, setReloadMatches] = useState(0)
+    const [reloadGames, setReloadGames] = useState(0)
 
     useEffect(() => {
         const fetchMatches = async () => {
@@ -14,7 +17,20 @@ function HomePage() {
             setMatches(mData)
         }
         fetchMatches()
-    }, [])
+    }, [reloadMatches])
+
+    useEffect(() => {
+        const fetchGames = async () => {
+            const gResponse = await fetch("/getFilteredGames", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                //body: JSON.stringify({official: true})
+            })
+            const gData = await gResponse.json()
+            setGames(gData)
+        }
+        fetchGames()
+    }, [reloadGames])
 
     return (
         <>
@@ -39,11 +55,11 @@ function HomePage() {
                     <MatchList matches={matches.slice(0,10)} />
                 </section>
                 <section>
-                    <h2>Popular Games</h2>
-                    <GameList />
+                    <h2>Official Games</h2>
+                    <GameList games={games} />
                 </section>
-                <MatchForm />
-                <GameForm />
+                <MatchForm onSubmit={() => setReloadMatches(reloadMatches+1)} />
+                <GameForm onSubmit={() => setReloadGames(reloadGames+1)} />
             </div>
         </>
     )   

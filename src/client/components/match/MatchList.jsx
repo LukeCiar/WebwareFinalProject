@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react"
 import MatchCard from "./MatchCard"
 
-function MatchList({ matches }) {
+function MatchList({matches}) {
     return (
         <table>
             <style> {`

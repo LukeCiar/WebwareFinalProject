@@ -1,18 +1,6 @@
-import { useState, useEffect } from "react"
 import GameCard from "./GameCard"
 
-function GameList() {
-    const [games, setGames] = useState([])
-
-    useEffect(() => {
-        const fetchGames = async () => {
-            const gResponse = await fetch("/getGames", {method: "GET"})
-            const gData = await gResponse.json()
-            setGames(gData)
-        }
-        fetchGames()
-    }, [])
-
+function GameList({games}) {
     return (
         <table>
             <style> {`

@@ -1,5 +1,5 @@
 
-const GameForm = () => {
+const GameForm = ({onSubmit}) => {
     const tags = [ //TODO put this somewhere else and import it here?
         "Cooperative", "Competitive",
         "<15 min", "15-30 min", "30-60 min", "60-120 min", "120+ min",
@@ -16,7 +16,9 @@ const GameForm = () => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(gameData)
-        })   
+        })
+
+        onSubmit() //prop from the caller - currently used to refresh the list on the home page
     }
     
     //TODO: remove inline styles (just here to break up the lines a bit)
