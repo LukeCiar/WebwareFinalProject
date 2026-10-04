@@ -24,7 +24,7 @@ function HomePage() {
             const gResponse = await fetch("/getFilteredGames", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                //body: JSON.stringify({official: true})
+                body: JSON.stringify({official: true})
             })
             const gData = await gResponse.json()
             setGames(gData)
@@ -33,35 +33,22 @@ function HomePage() {
     }, [reloadGames])
 
     return (
-        <>
-            <style> {`
-                #homeBody {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 2rem;
-                    padding: 1rem;
-                }
-
-                section {
-                    width: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                }
-            `} </style>
-            <div id = "homeBody">
-                <section>
+        <div className="container-fluid px-4">
+            <div className="row">
+                <section className="col">
                     <h2>Recent Matches</h2>
                     <MatchList matches={matches.slice(0,10)} />
                 </section>
-                <section>
+                <section className="col">
                     <h2>Official Games</h2>
                     <GameList games={games} />
                 </section>
-                <MatchForm onSubmit={() => setReloadMatches(reloadMatches+1)} />
-                <GameForm onSubmit={() => setReloadGames(reloadGames+1)} />
             </div>
-        </>
+            <div className="row">
+                <MatchForm className="col" onSubmit={() => setReloadMatches(reloadMatches+1)} />
+                <GameForm className="col" onSubmit={() => setReloadGames(reloadGames+1)} />
+            </div>
+        </div>
     )   
 }
 export default HomePage;

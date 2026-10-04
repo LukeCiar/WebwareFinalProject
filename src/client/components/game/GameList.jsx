@@ -2,21 +2,14 @@ import GameCard from "./GameCard"
 
 function GameList({games}) {
     return (
-        <table>
-            <style> {`
-                table, th, td {
-                    border-collapse: collapse;
-                    border: 1px solid;
-                    padding: .3rem;
-                `}
-            </style>
+        <table className="table table-bordered border-dark">
             <thead>
                 <tr>
-                    <th>Image</th>
+                    <th style={{width: "1%", whiteSpace: "nowrap"}}>Image</th>
                     <th>Game</th>
                     <th>Description</th>
                     <th>Tags</th>
-                    <th></th>
+                    <th style={{width: "1%", whiteSpace: "nowrap"}}></th>
                 </tr>
             </thead>
             <tbody>

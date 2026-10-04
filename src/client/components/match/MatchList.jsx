@@ -2,21 +2,14 @@ import MatchCard from "./MatchCard"
 
 function MatchList({matches}) {
     return (
-        <table>
-            <style> {`
-                table, th, td {
-                    border-collapse: collapse;
-                    border: 1px solid;
-                    padding: .3rem;
-                `}
-            </style>
+        <table className="table table-bordered border-dark">
             <thead>
                 <tr>
                     <th>Game</th>
                     <th>Date Played</th>
                     <th>Players</th>
                     <th>Notes</th>
-                    <th></th>
+                    <th style={{width: "1%", whiteSpace: "nowrap"}}></th>
                 </tr>
             </thead>
             <tbody>
