@@ -62,10 +62,37 @@ export const deleteGame = async (name) => {
     await gameCollection.deleteOne({name})
 }
 
+/**
+ * Updates a game's description and tags (nothing else about a game can be edited)
+ * @param {string} name The name of the game to update
+ * @param {Object} update The new values, in the format { description, tags }
+ */
+export const modifyGame = async (name, { description, tags }) => {
+    await gameCollection.updateOne(
+        { name },
+        { $set: { description, tags } }
+    )
+}
+
+// Escapes regex special characters so user input is matched as plain text
+const escapeRegex = (term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+
+/**
+ * @param {string} term Text to look for (case-insensitive) in game names
+ * @returns The games whose name contains the term
+ */
+export const searchGames = async (term) => {
+    const games = await gameCollection
+        .find({ name: { $regex: escapeRegex(term), $options: "i" } })
+        .project({_id: 0})
+        .toArray()
+    return games
+}
+
 //----------------Matches----------------
 
 export const addMatch = async (match) => {
-    matchCollection.insertOne(match)
+    await matchCollection.insertOne(match)
 }
 
 export const getAllMatches = async () => {
@@ -80,6 +107,9 @@ export const getAllMatches = async () => {
  * @returns The list of matches that match the given filter
  */
 export const getFilteredMatches = async (filter) => {
+    if (Object.hasOwn(filter, "id")) { //need to convert from String to ObjectID
+        return await getFilteredMatches({"_id": new ObjectId(filter.id)})
+    }
     const matches = await matchCollection.find(filter).sort({ datePlayed: 1 }).toArray()
     return matches
 }
@@ -114,6 +144,18 @@ export const getAllUsers = async () => {
 export const getUserByName = async (username) => {
     const user = await userCollection.findOne({username}, {projection: {passwordHash: 0}})
     return user
+}
+
+/**
+ * @param {string} term Text to look for (case-insensitive) in usernames
+ * @returns The users whose username contains the term (no passwordHash)
+ */
+export const searchUsers = async (term) => {
+    const users = await userCollection
+        .find({ username: { $regex: escapeRegex(term), $options: "i" } })
+        .project({_id: 0, passwordHash: 0})
+        .toArray()
+    return users
 }
 
 /**

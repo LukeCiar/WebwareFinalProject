@@ -35,8 +35,8 @@ async function AwardAchievementsFunction(listUsernames) {
     for (const username of listUsernames) {
         const achievements = await fetchAchievements(username)
         const userMatches = await fetchMatches(username)
-        // Currently this returns all matches not just matches for that user
-        console.log("userMatches", userMatches)
+        // Currently this returns all matches not just matches for that user - FIXED?
+        //console.log("userMatches", userMatches)
         const achivementLength = achievements.length
 
         if(!achievements.includes("1")) {

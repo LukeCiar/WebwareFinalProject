@@ -1,21 +1,27 @@
+import { useState, useEffect } from "react"
 import MatchCard from "./MatchCard"
 
 function MatchList({matches}) {
+    // Lookups so each card can show the game's image and each player's profile picture
+    const [gameImages, setGameImages] = useState({})
+    const [profilePictures, setProfilePictures] = useState({})
+
+    useEffect(() => {
+        const fetchLookups = async () => {
+            const games = await (await fetch("/getGames")).json()
+            const users = await (await fetch("/getUsers")).json()
+            setGameImages(Object.fromEntries(games.map(g => [g.name, g.image])))
+            setProfilePictures(Object.fromEntries(users.map(u => [u.username, u.profilePicture])))
+        }
+        fetchLookups()
+    }, [])
+
     return (
-        <table className="table table-bordered border-dark">
-            <thead>
-                <tr>
-                    <th>Game</th>
-                    <th>Date Played</th>
-                    <th>Players</th>
-                    <th>Notes</th>
-                    <th style={{width: "1%", whiteSpace: "nowrap"}}></th>
-                </tr>
-            </thead>
-            <tbody>
-                {matches.map((m) => <MatchCard key = {m._id} match={m} />)}
-            </tbody> 
-        </table>
+        <div className="d-flex flex-column gap-2">
+            {matches.map((m) => (
+                <MatchCard key = {m._id} match={m} gameImage={gameImages[m.gameName]} profilePictures={profilePictures} />
+            ))}
+        </div>
     )
 }
 

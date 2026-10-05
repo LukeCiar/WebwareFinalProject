@@ -34,19 +34,19 @@ function HomePage() {
 
     return (
         <div className="container-fluid px-4">
+            <div className="d-flex gap-2 mb-3">
+                <MatchForm onSubmit={() => setReloadMatches(reloadMatches+1)} />
+                <GameForm onSubmit={() => setReloadGames(reloadGames+1)} />
+            </div>
             <div className="row">
                 <section className="col">
                     <h2>Recent Matches</h2>
-                    <MatchList matches={matches.slice(0,10)} />
+                    <MatchList matches={[...matches].reverse().slice(0,10)} />
                 </section>
                 <section className="col">
                     <h2>Official Games</h2>
                     <GameList games={games} />
                 </section>
-            </div>
-            <div className="row">
-                <MatchForm className="col" onSubmit={() => setReloadMatches(reloadMatches+1)} />
-                <GameForm className="col" onSubmit={() => setReloadGames(reloadGames+1)} />
             </div>
         </div>
     )   

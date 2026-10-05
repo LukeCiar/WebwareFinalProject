@@ -135,6 +135,17 @@ app.post("/api/profile/password", requireAuth, async (req, res) => {
     res.json({ ok: true })
 })
 
+//----------------Search----------------
+
+// Returns { games, users } whose names contain the query text (case-insensitive)
+app.get("/api/search", async (req, res) => {
+    const term = String(req.query.q ?? "").trim()
+    if (term === "") return res.json({ games: [], users: [] })
+
+    const [games, users] = await Promise.all([db.searchGames(term), db.searchUsers(term)])
+    res.json({ games, users })
+})
+
 //----------------Games----------------
 
 app.post("/addGame", async (req, res) => {
@@ -151,6 +162,14 @@ app.get("/getGames", async (req, res) => {
 app.post("/getFilteredGames", async (req, res) => {
     const games = await db.getFilteredGames(req.body)
     res.status(200).json(games)
+})
+
+// Only the description and tags can be edited, and only by a logged in user
+app.post("/modifyGame", requireAuth, async (req, res) => {
+    const description = String(req.body.description ?? "")
+    const tags = Array.isArray(req.body.tags) ? req.body.tags.map(String) : []
+    await db.modifyGame(req.body.name, { description, tags })
+    res.status(200).end()
 })
 
 app.post("/deleteGame", async (req, res) => {
@@ -184,7 +203,7 @@ app.post("/modifyMatch", async (req, res) => {
 
 app.post("/deleteMatch", async (req, res) => {
     await db.deleteMatch(req.body.id)
-    res.status(200).end
+    res.status(200).end()
 })
 
 //----------------Users----------------

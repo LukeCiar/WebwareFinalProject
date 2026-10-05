@@ -1,7 +1,17 @@
-import { Link } from "react-router-dom";
-import ProfilePicture from "../components/profilePicture"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import ProfilePicture from "../components/ProfilePicture"
 
 function Topbar({ user, setUser }) {
+    const [searchTerm, setSearchTerm] = useState("")
+    const navigate = useNavigate()
+
+    const search = (e) => {
+        e.preventDefault()
+        if (searchTerm.trim() === "") return
+        navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`)
+    }
+
     const logout = async () => {
         await fetch("/auth/logout", { method: "POST" })
         setUser(null)
@@ -42,8 +52,9 @@ function Topbar({ user, setUser }) {
                             <Link to="/games" className="nav-link">Games</Link>
                         </li>
                         <li className="nav-item px-3">
-                            <form className="d-flex" role="search">
-                                <input className="form-control me-2" type="search" placeholder="Search games and users..." aria-label="Search"/>
+                            <form className="d-flex" role="search" onSubmit={search}>
+                                <input className="form-control me-2" type="search" placeholder="Search games and users..." aria-label="Search"
+                                       value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                                 <button className="btn btn-outline-primary" type="submit">Search</button>
                             </form>
                         </li>
