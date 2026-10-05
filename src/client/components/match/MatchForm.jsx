@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 import AwardAchievementsFunction from "../AwardAchievementsFunction"
 
-function MatchForm({onSubmit}) {
+//Only set matchToEdit if this is editing a match, not if it is creating a new match
+function MatchForm({onSubmit, matchToEdit}) {
     const [allGames, setAllGames] = useState([])
     const [numPlayers, setNumPlayers] = useState(1)
 
@@ -12,6 +13,8 @@ function MatchForm({onSubmit}) {
             setAllGames(gameData)
         }
         fetchData()
+
+        setNumPlayers(matchToEdit?.players.length || 0)
     }, [])
 
     const handleSubmit = async (formData) => {
@@ -30,16 +33,25 @@ function MatchForm({onSubmit}) {
             })
         }
 
-        await fetch("/addMatch", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(matchData)
-        })
+        if(matchToEdit) {
+            await fetch("/modifyMatch", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({oldId: matchToEdit._id, newMatch: matchData})
+            })
+        }
+        else {
+            await fetch("/addMatch", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(matchData)
+            })
+        }
 
         // Award achievements to any players that would get new ones from participating in this match
         await AwardAchievementsFunction(matchData.players.map((player) => player.name))
 
-        onSubmit() //prop from the caller - currently used to refresh the list on the home page
+        if(onSubmit) { onSubmit() } //prop from the caller - currently used to refresh the list on the home page
     }
 
     return (
@@ -47,30 +59,34 @@ function MatchForm({onSubmit}) {
             <form action={handleSubmit}>
                 <label style={{display: "block"}}>
                     Game
-                    <select name="gameName">
+                    <select
+                        name="gameName"
+                        defaultValue={matchToEdit?.gameName}
+                        key={allGames.length /*Makes it reload once the games are fetched*/}
+                    >
                         <option value="">-- Choose a game--</option>
                         {allGames.map(game => (
-                            <option value={game.name}>{game.name}</option>
+                            <option key={game.name} value={game.name}>{game.name}</option>
                         ))}
                     </select>
                 </label>
 
                 {Array.from({ length: numPlayers }).map((_, index) => (
-                    <div>
+                    <div key={index}>
                         Player {index+1} &nbsp; {/*&nbsp; forces a space - can get rid of once we have proper formatting*/}
                         <label>
                             Username/Name
-                            <input type="text" name={`name_${index}`} />
+                            <input type="text" name={`name_${index}`} defaultValue={matchToEdit?.players[index].name} />
                         </label>
 
                         <label>
                             Score
-                            <input type="number" name={`score_${index}`} />
+                            <input type="number" name={`score_${index}`} defaultValue={matchToEdit?.players[index].score} />
                         </label>
 
                         <label>
                             Won?
-                            <input type="radio" name="winner" value={index} />
+                            <input type="radio" name="winner" value={index} defaultChecked={matchToEdit?.players[index].won} />
                         </label>
                     </div>
                 ))}
@@ -82,12 +98,16 @@ function MatchForm({onSubmit}) {
 
                 <label style={{display: "block"}}>
                     Date Played
-                    <input type="date" name="datePlayed" defaultValue={new Date().toISOString().split('T')[0]} />
+                    <input
+                        type="date"
+                        name="datePlayed"
+                        defaultValue={matchToEdit?.datePlayed || new Date().toISOString().split('T')[0]}
+                    />
                 </label>
 
                 <label style={{display: "block"}}>
                     Notes
-                    <textarea name="notes"></textarea>
+                    <textarea name="notes" defaultValue={matchToEdit?.notes} ></textarea>
                 </label>
 
                 <input type="submit" className="btn btn-primary" value="Submit Match" />

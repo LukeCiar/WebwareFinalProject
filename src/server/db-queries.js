@@ -80,6 +80,9 @@ export const getAllMatches = async () => {
  * @returns The list of matches that match the given filter
  */
 export const getFilteredMatches = async (filter) => {
+    if (Object.hasOwn(filter, "id")) { //need to convert from String to ObjectID
+        return await getFilteredMatches({"_id": new ObjectId(filter.id)})
+    }
     const matches = await matchCollection.find(filter).sort({ datePlayed: 1 }).toArray()
     return matches
 }

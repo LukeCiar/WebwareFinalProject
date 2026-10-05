@@ -5,7 +5,7 @@ function UserCard({user, winner = false}) {
     return (
         <tr>
             <td><ProfilePicture name={user.profilePicture} alttext={user.username+"'s profile picture"} width="50px" height="50px"/></td>
-            <td>{user.username}</td>
+            <td>{user.name}</td>
             <td>{winner && ("Winner")}</td>
         </tr>
     )

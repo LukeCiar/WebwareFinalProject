@@ -184,7 +184,7 @@ app.post("/modifyMatch", async (req, res) => {
 
 app.post("/deleteMatch", async (req, res) => {
     await db.deleteMatch(req.body.id)
-    res.status(200).end
+    res.status(200).end()
 })
 
 //----------------Users----------------
