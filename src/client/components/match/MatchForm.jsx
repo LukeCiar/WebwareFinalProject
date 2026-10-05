@@ -4,8 +4,9 @@ import HandPicker from "./HandPicker"
 import { getHandRules } from "./cardGames"
 import { getWinCondition, isScoreCondition, isTimeCondition, pickWinners } from "../game/winConditions"
 
-// gameName is optional: pages about one game pass it so the game is already chosen
-function MatchForm({onSubmit, gameName}) {
+//Only set matchToEdit if this is editing a match, not if it is creating a new match
+//gameName is optional: pages about one game pass it so the game is already chosen
+function MatchForm({onSubmit, matchToEdit, gameName}) {
     const [allGames, setAllGames] = useState([])
     const [open, setOpen] = useState(false)
     const [numPlayers, setNumPlayers] = useState(1)
@@ -41,12 +42,23 @@ function MatchForm({onSubmit, gameName}) {
         if (open) fetchData()
     }, [open])
 
+    //Only load this on first mount to avoid infinitely setting open
+    useEffect(() => {
+        if(matchToEdit) {
+            setNumPlayers(matchToEdit.players.length)
+            setSelectedGame(matchToEdit.gameName)
+            setHands(matchToEdit.players.map(p => p.hand))
+            if(!open) { setOpen(true) }
+        }
+    }, [])
+
     // Closes the menu and clears everything that was entered
     const close = () => {
         setOpen(false)
         setSelectedGame(gameName ?? "")
         setNumPlayers(1)
         setHands([])
+        if(matchToEdit) { onSubmit() } //without this, modify match needs to be pressed twice to re-open
     }
 
     const handleSubmit = async (formData) => {
@@ -71,22 +83,33 @@ function MatchForm({onSubmit, gameName}) {
             matchData.players.forEach((player, i) => player.won = winners[i])
         }
 
-        await fetch("/addMatch", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(matchData)
-        })
+        if(matchToEdit) {
+            await fetch("/modifyMatch", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({oldId: matchToEdit._id, newMatch: matchData})
+            })
+        }
+        else {
+            await fetch("/addMatch", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(matchData)
+            })
+        }
 
         // Award achievements to any players that would get new ones from participating in this match
         await AwardAchievementsFunction(matchData.players.map((player) => player.name))
 
         close()
-        onSubmit() //prop from the caller - currently used to refresh the list on the home page
+        if(onSubmit) { onSubmit() } //prop from the caller - currently used to refresh the list on the home page
     }
 
     return (
         <>
-            <button type="button" className="btn btn-primary" onClick={() => setOpen(true)}>Submit Match</button>
+            {!matchToEdit && 
+                <button type="button" className="btn btn-primary" onClick={() => setOpen(true)}>Submit Match</button>
+            }
 
             {open && (
                 <div className="modal d-block" tabIndex="-1" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
@@ -118,6 +141,7 @@ function MatchForm({onSubmit, gameName}) {
                                     {Array.from({ length: numPlayers }).map((_, index) => (
                                         <div key={index} className="d-flex flex-wrap align-items-start gap-2 mb-2">
                                             <input className="form-control w-auto" type="text" name={`name_${index}`}
+                                                   defaultValue={matchToEdit?.players[index]?.name}
                                                    placeholder={`Player ${index+1} username/name`} aria-label={`Player ${index+1} username or name`} />
 
                                             {handRules && (
@@ -127,18 +151,21 @@ function MatchForm({onSubmit, gameName}) {
 
                                             {usesScore && (
                                                 <input className="form-control w-auto" type="number" name={`score_${index}`}
+                                                       defaultValue={matchToEdit?.players[index]?.score}
                                                        placeholder="Score" aria-label={`Player ${index+1} score`} required />
                                             )}
 
                                             {usesTime && (
                                                 <input className="form-control w-auto" type="text" name={`time_${index}`}
                                                        placeholder="Time (m:ss)" aria-label={`Player ${index+1} time`}
+                                                       defaultValue={matchToEdit?.players[index]?.time}
                                                        pattern="\d+(:[0-5]\d){1,2}" title="Use m:ss or h:mm:ss, like 3:25" required />
                                             )}
 
                                             {marksWinner && (
                                                 <label className="form-check">
-                                                    <input className="form-check-input" type="radio" name="winner" value={index} />
+                                                    <input className="form-check-input" type="radio" name="winner" value={index}
+                                                           defaultChecked={matchToEdit?.players[index]?.won} />
                                                     Won?
                                                 </label>
                                             )}
@@ -155,12 +182,13 @@ function MatchForm({onSubmit, gameName}) {
                                     <label className="form-label w-100">
                                         Date Played
                                         <input className="form-control w-auto" type="date" name="datePlayed"
-                                               defaultValue={new Date().toISOString().split('T')[0]} />
+                                               defaultValue={matchToEdit?.datePlayed || new Date().toISOString().split('T')[0]}
+                                        />
                                     </label>
 
                                     <label className="form-label w-100">
                                         Notes
-                                        <textarea className="form-control" name="notes"></textarea>
+                                        <textarea className="form-control" name="notes" defaultValue={matchToEdit?.notes} ></textarea>
                                     </label>
                                 </>)}
                             </div>

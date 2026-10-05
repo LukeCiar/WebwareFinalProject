@@ -1,46 +1,81 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom";
 import UserCard from "../components/UserCard.jsx";
+import GameCard from "../components/game/GameCard"
+import MatchForm from "../components/match/MatchForm"
 import HandDropdown from "../components/match/HandDropdown";
 import { getHandRules } from "../components/match/cardGames";
 
 function MatchPage() {
     const matchId = useParams().matchId;
-    // undefined while loading, null if there's no match with this id
-    const [match, setMatch] = useState(undefined)
+    const [match, setMatch] = useState()
     const [profilePictures, setProfilePictures] = useState({})
-    const [game, setGame] = useState(null)
+    const [game, setGame] = useState()
+    const [modifying, setModifying] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
-        const fetchData = async () => {
-            // There's no get-by-id endpoint, so find the match in the full list
-            const matches = await (await fetch("/getMatches")).json()
-            const foundMatch = matches.find(m => m._id === matchId) ?? null
-            setMatch(foundMatch)
+        const fetchMatch = async () => {
+            const matchResponse = await fetch("/getFilteredMatches", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({id: matchId})
+            })
+            const matchData = await matchResponse.json()
+            setMatch(matchData[0])
+        }
 
-            // The game says how its starting hands are shown
-            if (foundMatch) {
-                const games = await (await fetch("/getFilteredGames", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({name: foundMatch.gameName})
-                })).json()
-                setGame(games[0] ?? null)
-            }
+        fetchMatch()
+    }, [modifying])
 
+    useEffect(() => {
+        if(!match) { return undefined }
+        const fetchGame = async () => {
+            const gameResponse = await fetch("/getFilteredGames", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({name: match.gameName})
+            })
+            const gameData = await gameResponse.json()
+            setGame(gameData[0])
+        }
+        fetchGame()
+    }, [match])
+
+    useEffect(() => {
+        const fetchUsers = async () => {
             const users = await (await fetch("/getUsers")).json()
             setProfilePictures(Object.fromEntries(users.map(u => [u.username, u.profilePicture])))
         }
-        fetchData()
-    }, [matchId])
+        fetchUsers()
+    }, [match])
 
-    if (match === undefined) return <p>Loading...</p>
-    if (match === null) return <p>Sorry, that match doesn't exist.</p>
+    const handleDelete = async () => {
+        if(modifying) { setModifying(false) }
+
+        const confirmed = window.confirm(`Are you sure you want to delete this match?`)
+        if(confirmed) {
+            await fetch("/deleteMatch", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({id: match._id})
+            })
+            console.log("here")
+            navigate("/")
+        }
+    }
+
+    if (match === undefined) {
+        return <p>Could not find this match</p>
+    }
 
     return (
         <>
-            <h1>Match {matchId} of {match.gameName}</h1>
+            <h1>{match.datePlayed} Match of {match.gameName}</h1>
 
+            {/* Update to reflect new GameCard */}
+            {game && <table className="table w-75 mx-auto"><tbody><GameCard game={game}/></tbody></table>}
+            
             <h2> Players: </h2>
             <div className="d-flex flex-wrap gap-2">
                 {match.players.map((player, i) => (
@@ -55,6 +90,26 @@ function MatchPage() {
 
             <h2>Notes:</h2>
             {match.notes}
+
+            <div className="w-25 m-auto d-flex">
+                <button
+                    onClick = {() => modifying ? setModifying(false) : setModifying(true)}
+                    className = "btn btn-warning"
+                >
+                    Modify Match
+                </button>
+
+                <button
+                    onClick = {handleDelete}
+                    className = "btn btn-danger ms-auto"
+                >
+                    Delete Match
+                </button>
+            </div>
+            
+            {modifying && 
+                <MatchForm onSubmit={() => setModifying(false)} matchToEdit={match} />
+            }
         </>
     )
 }
