@@ -74,15 +74,18 @@ function MatchPage() {
             <h1>{match.datePlayed} Match of {match.gameName}</h1>
 
             {/* Update to reflect new GameCard */}
-            {game && <table className="table w-75 mx-auto"><tbody><GameCard game={game}/></tbody></table>}
+            {game && <GameCard game={game} className="w-50" />}
             
             <h2> Players: </h2>
-            <div className="d-flex flex-wrap gap-2">
+            <div className="d-flex flex-wrap gap-3">
                 {match.players.map((player, i) => (
                     <div key={i} className="d-flex flex-column align-items-center">
                         <UserCard user={{username: player.name, profilePicture: profilePictures[player.name]}} />
                         {player.hand?.length > 0 && getHandRules(game) && (
                             <HandDropdown hand={player.hand} game={getHandRules(game)} />
+                        )}
+                        {player.score && (
+                            <span>Score: {player.score}</span>
                         )}
                     </div>
                 ))}
