@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import {useParams} from "react-router-dom"
 import Achievements from "../components/Achievements"
-import ProfilePicture from "../components/profilePicture"
+import ProfilePicture from "../components/ProfilePicture"
 import MatchList from "../components/match/MatchList"
 
 function UserPage() { 
@@ -67,7 +67,7 @@ function UserPage() {
             
             <section>
                 <h2> Recently Played Games: </h2>
-                <MatchList matches={matches} />
+                <MatchList matches={[...matches].reverse()} />
             </section>
         </>
     )   

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate, useOutletContext } from "react-router-dom";
 import Achievements from "../components/Achievements";
-import ProfilePicture from "../components/profilePicture";
+import ProfilePicture from "../components/ProfilePicture";
 import MatchList from "../components/match/MatchList";
 
 // Values for what "page" to display: the default one or one that lets you edit something
@@ -168,7 +168,7 @@ function ProfilePage() {
 
                     <section>
                         <h2> Recently Played Games: </h2>
-                        <MatchList matches={matches} />
+                        <MatchList matches={[...matches].reverse()} />
                     </section>
                 </>
             )

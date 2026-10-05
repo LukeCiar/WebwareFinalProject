@@ -1,50 +1,130 @@
+import { useState } from "react"
+import { GAME_TAGS } from "./gameTags"
+import { WIN_CONDITIONS } from "./winConditions"
 
 const GameForm = ({onSubmit}) => {
-    const tags = [ //TODO put this somewhere else and import it here?
-        "Cooperative", "Competitive",
-        "<15 min", "15-30 min", "30-60 min", "60-120 min", "120+ min",
-        "Party", "Trick-taking"
-    ]
+    const [open, setOpen] = useState(false)
+    const [error, setError] = useState("")
+    const [isCardGame, setIsCardGame] = useState(false)
+    const [dealsHand, setDealsHand] = useState(false)
 
-    const handleSubmit = async (formData) => {
+    // Closes the menu and clears any error
+    const close = () => {
+        setOpen(false)
+        setError("")
+        setIsCardGame(false)
+        setDealsHand(false)
+    }
+
+    const handleSubmit = async (e) => {
+        // Not a form action, so the fields keep what was typed if the game can't be added
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget)
+
         const gameData = {
             name: formData.get("name"),
             description: formData.get("description"),
-            tags: formData.getAll("tags")
+            tags: formData.getAll("tags"),
+            winCondition: formData.get("winCondition"),
+            cardGame: isCardGame,
+            dealsHand: isCardGame && dealsHand
         }
-        await fetch("/addGame", {
+        if (gameData.dealsHand) {
+            gameData.handSize = Number(formData.get("handSize"))
+        }
+
+        const response = await fetch("/addGame", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(gameData)
         })
 
+        if (!response.ok) {
+            setError("Couldn't add the game. Is there already a game with that name?")
+            return
+        }
+
+        close()
         onSubmit() //prop from the caller - currently used to refresh the list on the home page
     }
-    
-    //TODO: remove inline styles (just here to break up the lines a bit)
+
     return (
-    <>
-        <form action={handleSubmit}>
-            <label style={{display: "block"}}>
-                Name
-                <input type="text" name="name" />
-            </label>
+        <>
+            <button type="button" className="btn btn-primary" onClick={() => setOpen(true)}>Add Game</button>
 
-            <label style={{display: "block"}}>
-                Description
-                <textarea name="description"></textarea>
-            </label>
-            
-            {tags.map(tag => (
-                <label>
-                    {tag}
-                    <input type="checkbox" name="tags" value={tag} key={tag} />
-                </label>
-            ))}
+            {open && (
+                <div className="modal d-block" tabIndex="-1" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
+                    <div className="modal-dialog modal-lg">
+                        <form className="modal-content" onSubmit={handleSubmit}>
+                            <div className="modal-header">
+                                <h5 className="modal-title">Add a Game</h5>
+                                <button type="button" className="btn-close" aria-label="Close" onClick={close}></button>
+                            </div>
 
-            <input type="submit" value="Submit Game" style={{display: "block"}} />
-        </form>
-    </>
+                            <div className="modal-body">
+                                <label className="form-label w-100">
+                                    Name
+                                    <input className="form-control" type="text" name="name" required />
+                                </label>
+
+                                <label className="form-label w-100">
+                                    Description
+                                    <textarea className="form-control" name="description"></textarea>
+                                </label>
+
+                                <label className="form-label w-100">
+                                    Win condition
+                                    <select className="form-select w-auto" name="winCondition" defaultValue="none">
+                                        {WIN_CONDITIONS.map(condition => (
+                                            <option key={condition.value} value={condition.value}>{condition.label}</option>
+                                        ))}
+                                    </select>
+                                </label>
+
+                                <div>Tags</div>
+                                <div className="mb-3">
+                                    {GAME_TAGS.map(tag => (
+                                        <label key={tag} className="form-check form-check-inline">
+                                            <input className="form-check-input" type="checkbox" name="tags" value={tag} />
+                                            {tag}
+                                        </label>
+                                    ))}
+                                </div>
+
+                                <label className="form-check form-switch">
+                                    <input className="form-check-input" type="checkbox" role="switch"
+                                           checked={isCardGame} onChange={(e) => setIsCardGame(e.target.checked)} />
+                                    This is a card game
+                                </label>
+
+                                {isCardGame && (
+                                    <label className="form-check form-switch">
+                                        <input className="form-check-input" type="checkbox" role="switch"
+                                               checked={dealsHand} onChange={(e) => setDealsHand(e.target.checked)} />
+                                        Each player gets a starting hand
+                                    </label>
+                                )}
+
+                                {isCardGame && dealsHand && (
+                                    <label className="form-label">
+                                        Cards per player
+                                        <input className="form-control w-auto" type="number" name="handSize"
+                                               min="1" max="52" required />
+                                    </label>
+                                )}
+
+                                {error && <div className="alert alert-danger mt-3 mb-0">{error}</div>}
+                            </div>
+
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={close}>Cancel</button>
+                                <button type="submit" className="btn btn-primary">Add Game</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </>
     )
 }
 
