@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navigate, useOutletContext } from "react-router-dom";
+import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import Achievements from "../components/Achievements";
 import ProfilePicture from "../components/ProfilePicture";
 import MatchList from "../components/match/MatchList";
@@ -31,7 +31,8 @@ function ProfilePage() {
     const [newPassword, setNewPassword] = useState("");
     const [newProfilePicture, setNewProfilePicture] = useState(null);
     const [error, setError] = useState("");
-    const [matches, setMatches] = useState([])
+    const [matches, setMatches] = useState([]);
+    const navigate = useNavigate();
     
     useEffect(() => {
         if (user != null) {
@@ -165,6 +166,18 @@ function ProfilePage() {
         }
     };
 
+    const handleDeleteAccount = async () => {
+        const confirmed = window.confirm(`Are you sure you want to your account?`)
+        if(confirmed) {
+            await fetch("/deleteUser", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({username: user.username})
+            })
+            navigate("/")
+        }
+    }
+
     return (
         <>  
             <div className="input-group mb-3">
@@ -186,6 +199,9 @@ function ProfilePage() {
             </button>
             <button onClick={() => setChangeSettings(CHANGE_PASSWORD)}>
                 Change Password
+            </button>
+            <button onClick={() => handleDeleteAccount()}>
+                Delete Account
             </button>
 
             <br />
