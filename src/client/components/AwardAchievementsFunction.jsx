@@ -36,7 +36,6 @@ async function AwardAchievementsFunction(listUsernames) {
         const achievements = await fetchAchievements(username)
         const userMatches = await fetchMatches(username)
         const achivementLength = achievements.length
-
         if(!achievements.includes("1")) {
             // Create an account
             // This should really be a seperate case but is fine for now
@@ -90,10 +89,10 @@ async function AwardAchievementsFunction(listUsernames) {
             const gameTypes = []
             for (const match of userMatches) {
                 if (!gameTypes.includes(match.gameName)) {
-                    console.log("gameName: ", match.gameName, " values, ", Object.values(match))
                     gameTypes.push(match.gameName)
                 }
             }
+            console.log("games", gameTypes)
             if(!achievements.includes("9") && !achievements.includes("9")) {
             // Play 3 different games
                 if (gameTypes.length >= 10) {
@@ -122,6 +121,11 @@ async function AwardAchievementsFunction(listUsernames) {
                 }
                 else {
                     gameTypes[match.gameName] += 1
+                }
+            }
+            for (value of gameTypes.values) {
+                if (value >= 5) {
+                    achievements.push("10")
                 }
             }
         }
