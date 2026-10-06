@@ -35,10 +35,7 @@ async function AwardAchievementsFunction(listUsernames) {
     for (const username of listUsernames) {
         const achievements = await fetchAchievements(username)
         const userMatches = await fetchMatches(username)
-        // Currently this returns all matches not just matches for that user - FIXED?
-        //console.log("userMatches", userMatches)
         const achivementLength = achievements.length
-
         if(!achievements.includes("1")) {
             // Create an account
             // This should really be a seperate case but is fine for now
@@ -90,20 +87,19 @@ async function AwardAchievementsFunction(listUsernames) {
         if(!achievements.includes("9")) {
             // Count different game types
             const gameTypes = []
-            for (const match in userMatches) {
+            for (const match of userMatches) {
                 if (!gameTypes.includes(match.gameName)) {
                     gameTypes.push(match.gameName)
                 }
             }
-            if(!achievements.includes("9") && !achievements.includes("9")) {
-            // Play 3 different games
-                if (gameTypes.length >= 10) {
-                    achievements.push("8")
-                }
+            console.log("games", gameTypes)
+            // Play 10 different games
+            if (gameTypes.length >= 10) {
+                achievements.push("9")
             }
             
-            // Play 10 differnet
-            if (gameTypes.length >= 10) {
+            // Play 3 differnet
+            if (gameTypes.length >= 3) {
                 achievements.push("8")
             }
         }
@@ -117,7 +113,7 @@ async function AwardAchievementsFunction(listUsernames) {
                 })
             
             const gameTypes = {}
-            for (const match in wonGames) {
+            for (const match of wonGames) {
                 if (!(match.gameName in gameTypes)) {
                     gameTypes[match.gameName] = 1
                 }
@@ -125,12 +121,16 @@ async function AwardAchievementsFunction(listUsernames) {
                     gameTypes[match.gameName] += 1
                 }
             }
+            for (const value of Object.values(gameTypes)) {
+                if (value >= 5) {
+                    achievements.push("10")
+                }
+            }
         }
 
         // send updates to server
         if (achievements.length != achivementLength) {
             // a new achivement was added so send it if user exists
-            console.log(username, achievements)
             
             const doesUserExistResponse = await fetch("/getUserByName", 
                 {method: "POST",

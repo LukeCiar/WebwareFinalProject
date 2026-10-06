@@ -145,7 +145,7 @@ function ProfilePage() {
         else if (changeSettings == CHANGE_BIO) {
             return (
                 <>
-                    <textarea value={bioDraft} maxLength={500} onChange={(event) => setBioDraft(event.target.value)} />
+                    <textarea className="form-control" value={bioDraft} maxLength={500} onChange={(event) => setBioDraft(event.target.value)} />
                     <br />
                     <button onClick={stopEditing}>Cancel</button>
                     <button onClick={changeBio}>Save Change</button>
@@ -155,7 +155,7 @@ function ProfilePage() {
         else {
             return (
                 <>
-                    <button onClick={startBioEdit}>
+                    <button className="form-control" onClick={startBioEdit}>
                         <p>
                             {user.bio || "Click to add a bio..."}
                         </p>
@@ -176,18 +176,23 @@ function ProfilePage() {
     };
 
     return (
-        <>
-            <button onClick={() => setChangeSettings(CHANGE_PROFILEPICTURE)}>
-                {user == null ?
-                <ProfilePicture name={""} alttext={""}/>
-                :
-                <ProfilePicture name={user.profilePicture} alttext={user.username+"'s profile picture showing a "+user.profilePicture}/>
-                }
-            </button>
+        <>  
+            <div className="input-group mb-3">
+                <button className="input-group-prepend" onClick={() => setChangeSettings(CHANGE_PROFILEPICTURE)}>
+                    {user == null ?
+                    <ProfilePicture name={""} alttext={""}/>
+                    :
+                    <ProfilePicture name={user.profilePicture} alttext={user.username+"'s profile picture showing a "+user.profilePicture}/>
+                    }
+                </button>
+                <button className="input-group-text" onClick={() => setChangeSettings(CHANGE_USERNAME)}>
+                    <h1>
+                        {user.username}
+                    </h1>
+                </button>
+            </div>
             <button onClick={() => setChangeSettings(CHANGE_USERNAME)}>
-                <h1>
-                    {user.username}
-                </h1>
+                Change Username
             </button>
             <button onClick={() => setChangeSettings(CHANGE_PASSWORD)}>
                 Change Password
