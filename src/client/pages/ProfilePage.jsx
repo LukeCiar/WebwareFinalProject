@@ -160,16 +160,6 @@ function ProfilePage() {
                             {user.bio || "Click to add a bio..."}
                         </p>
                     </button>
-
-                    <section>
-                        <h2> Achivements: </h2>
-                        <Achievements username={user.username} />
-                    </section>
-
-                    <section>
-                        <h2> Recently Played Games: </h2>
-                        <MatchList matches={[...matches].reverse()} />
-                    </section>
                 </>
             )
         }
@@ -203,6 +193,16 @@ function ProfilePage() {
             {error && <p style={{ color: "#dc3545" }}>{error}</p>}
 
             {popupManager()}
+
+            <section>
+                <h2> Achivements: </h2>
+                <Achievements username={user.username} />
+            </section>
+
+            <section>
+                <h2> Recently Played Games: </h2>
+                <MatchList matches={[...matches].reverse()} />
+            </section>
         </>
     )
 }
