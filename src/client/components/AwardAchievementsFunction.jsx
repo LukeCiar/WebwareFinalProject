@@ -94,7 +94,9 @@ async function AwardAchievementsFunction(listUsernames) {
             }
             console.log("games", gameTypes)
             // Play 10 different games
-            achievements.push("9")
+            if (gameTypes.length >= 10) {
+                achievements.push("9")
+            }
             
             // Play 3 differnet
             if (gameTypes.length >= 3) {
