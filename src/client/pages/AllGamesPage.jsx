@@ -14,7 +14,9 @@ function AllGamesPage() {
                 method: "GET"
             })
             const gData = await gResponse.json()
-            setGames(gData)
+            const officialGames = gData.filter(g => g.official)
+            const unofficialGames = gData.filter(g => !Object.hasOwn(g, "official") || !g.official)
+            setGames([...officialGames, ...unofficialGames])
         }
         fetchGames()
     }, [reloadGames])
