@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import AwardAchievementsFunction from "./AwardAchievementsFunction"
 
 function Achievements({username}) { 
     // Storing an achivement in an dictionaly where key is achivement number and an achivement is a array of achivement name, description
@@ -21,15 +22,29 @@ function Achievements({username}) {
         const fetchData = async () => {
             if (username != "") {
                 // Get the current users achievements from server
-                // Problem here is I don't think a get request can have a body
                 const userResponse = await fetch("/getUserByName", 
                     {method: "POST",
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify( {username} ) 
                     }
                 )
-                const userData = await userResponse.json();
+                let userData = await userResponse.json();
                 
+                // If user has no achievemnts it is a new account so double check for them
+                if (userData != null && userData.achievements != null && userData.achievements.length == 0) {
+                    await AwardAchievementsFunction([username])
+
+                    // Get updated user since achievemnts will have changed
+                    // Get the current users achievements from server
+                    const updatedUserResponse = await fetch("/getUserByName", 
+                        {method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify( {username} ) 
+                        }
+                    )
+                    userData = await updatedUserResponse.json();
+                }
+
                 if (userData != null) {
                     //Get a list of completed achivements
                     //TODO: update userData.achievements with the naming scheme implemented when creating users

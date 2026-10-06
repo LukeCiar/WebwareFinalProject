@@ -47,7 +47,7 @@ passport.use(new LocalStrategy(async (username, password, done) => {
         if (user === null) {
             const passwordHash = await bcrypt.hash(password, 10)
             // Achievement "1" is "Create an account"
-            await db.addUser({ username, passwordHash, bio: "", achievements: ["1"] })
+            await db.addUser({ username, passwordHash, bio: "", achievements: [] })
             user = await db.getUserForAuth(username)
             isNew = true
         }
