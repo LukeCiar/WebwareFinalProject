@@ -93,15 +93,12 @@ async function AwardAchievementsFunction(listUsernames) {
                 }
             }
             console.log("games", gameTypes)
-            if(!achievements.includes("9") && !achievements.includes("9")) {
-            // Play 3 different games
-                if (gameTypes.length >= 10) {
-                    achievements.push("8")
-                }
+            // Play 10 different games
+            achievements.push("9")
             }
             
-            // Play 10 differnet
-            if (gameTypes.length >= 10) {
+            // Play 3 differnet
+            if (gameTypes.length >= 3) {
                 achievements.push("8")
             }
         }
@@ -123,7 +120,7 @@ async function AwardAchievementsFunction(listUsernames) {
                     gameTypes[match.gameName] += 1
                 }
             }
-            for (value of gameTypes.values) {
+            for (const value of Object.values(gameTypes)) {
                 if (value >= 5) {
                     achievements.push("10")
                 }
