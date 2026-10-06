@@ -80,6 +80,7 @@ function MatchPage() {
             <div className="d-flex flex-wrap gap-3">
                 {match.players.map((player, i) => (
                     <div key={i} className="d-flex flex-column align-items-center">
+                        <span style={{visibility: player.won ? "visible" : "hidden"}}>👑</span>
                         <UserCard user={{username: player.name, profilePicture: profilePictures[player.name]}} />
                         {player.hand?.length > 0 && getHandRules(game) && (
                             <HandDropdown hand={player.hand} game={getHandRules(game)} />
