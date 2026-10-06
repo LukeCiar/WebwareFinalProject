@@ -22,7 +22,7 @@ function MatchCard({ match, gameImage, profilePictures = {} }) {
                             {/* Placeholder crown - swap for the crown image later. Invisible spacer keeps pictures lined up. */}
                             <small style={{visibility: p.won ? "visible" : "hidden", lineHeight: 1}}>👑</small>
                             <ProfilePicture name={profilePictures[p.name]} alttext={`${p.name}'s profile picture`} width="36px" height="36px" />
-                            <small style={{lineHeight: 1.2}}>{p.name}</small>
+                            <small style={{lineHeight: 1.2}}>{p.name.length > 20 ? p.name.slice(0,17) + "..." : p.name}</small>
                         </div>
                     ))}
                 </div>
