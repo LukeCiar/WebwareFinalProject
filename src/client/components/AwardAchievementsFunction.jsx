@@ -43,7 +43,9 @@ async function AwardAchievementsFunction(listUsernames) {
         }
         if(!achievements.includes("2")) {
             // Play your first game
-            achievements.push("2")
+            if (userMatches.length >= 1) {
+                achievements.push("2")
+            }
         }
         if(!achievements.includes("3")) {
             // Play your 5 games
