@@ -143,10 +143,10 @@ async function AwardAchievementsFunction(listUsernames) {
             const userExists = await doesUserExistResponse.json();
 
             if (userExists != null) {
-                const userResponse = await fetch("/modifyUser", 
+                const userResponse = await fetch("/modifyUserAchievement", 
                     {method: "POST",
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify( {"username":username, "update":{"achievements":achievements} } ) 
+                    body: JSON.stringify( {"username":username, "update":achievements } ) 
                     }
                 )
             }
