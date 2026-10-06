@@ -177,7 +177,7 @@ function ProfilePage() {
 
     return (
         <>  
-            <div class="input-group mb-3">
+            <div className="input-group mb-3">
                 <button className="input-group-prepend" onClick={() => setChangeSettings(CHANGE_PROFILEPICTURE)}>
                     {user == null ?
                     <ProfilePicture name={""} alttext={""}/>
