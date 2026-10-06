@@ -81,7 +81,7 @@ function GamePage() {
             }
 
             <h2>Matches of this Game:</h2>
-            <MatchList matches={[...matches].reverse()}/>
+            <MatchList matches={[...matches].reverse()} matchCount={5}/>
 
             <button 
                 onClick={deleteGame}
