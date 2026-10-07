@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import MatchList from "../components/match/MatchList"
 import GameList from "../components/game/GameList"
 import MatchForm from "../components/match/MatchForm"
-import GameForm from "../components/game/GameForm"
+import {Link} from "react-router-dom";
 
 function HomePage() {
     const [matches, setMatches] = useState([])
@@ -34,17 +34,19 @@ function HomePage() {
 
     return (
         <div className="container-fluid px-4">
-            <div className="d-flex gap-2 mb-3">
-                <MatchForm onSubmit={() => setReloadMatches(reloadMatches+1)} />
-                <GameForm onSubmit={() => setReloadGames(reloadGames+1)} />
-            </div>
             <div className="row">
                 <section className="col-lg-6">
-                    <h2>Recent Matches</h2>
+                    <div className="d-flex justify-content-between pb-2">
+                        <h2>Recent Matches</h2>
+                        <MatchForm onSubmit={() => setReloadMatches(reloadMatches+1)} />
+                    </div>
                     <MatchList matches={[...matches].reverse().slice(0,10)} />
                 </section>
                 <section className="col-lg-6">
-                    <h2>Official Games</h2>
+                    <div className="d-flex justify-content-between pb-2">
+                        <h2>Official Games</h2>
+                        <Link to={"/games"} className={"btn btn-primary align-content-center"}>View All Games</Link>
+                    </div>
                     <GameList games={games} />
                 </section>
             </div>
