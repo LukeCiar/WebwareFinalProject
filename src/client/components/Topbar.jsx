@@ -17,9 +17,7 @@ function Topbar({ user, setUser }) {
         setUser(null)
     }
 
-    // TODO Get this data from the profile system
     // If user == null you are not signed in or loaded so use that instead of signedIn
-    //let siignedIn = false;
     let username = user ? user.username : null
 
     let profileDropdown;
@@ -44,14 +42,14 @@ function Topbar({ user, setUser }) {
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0 w-75">
                         <li className="nav-item">
                             <Link to="/" className="nav-link">Home</Link>
                         </li>
                         <li className="nav-item">
                             <Link to="/games" className="nav-link">Games</Link>
                         </li>
-                        <li className="nav-item px-3">
+                        <li className="nav-item px-3 w-50">
                             <form className="d-flex" role="search" onSubmit={search}>
                                 <input className="form-control me-2" type="search" placeholder="Search games and users..." aria-label="Search"
                                        value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
