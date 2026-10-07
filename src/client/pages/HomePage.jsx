@@ -36,14 +36,14 @@ function HomePage() {
         <div className="container-fluid px-4">
             <div className="row">
                 <section className="col-lg-6">
-                    <div className="d-flex justify-content-between pb-2">
+                    <div className="d-flex justify-content-between mb-3">
                         <h2>Recent Matches</h2>
                         <MatchForm onSubmit={() => setReloadMatches(reloadMatches+1)} />
                     </div>
                     <MatchList matches={[...matches].reverse().slice(0,10)} />
                 </section>
                 <section className="col-lg-6">
-                    <div className="d-flex justify-content-between pb-2">
+                    <div className="d-flex justify-content-between mb-3">
                         <h2>Official Games</h2>
                         <Link to={"/games"} className={"btn btn-primary align-content-center"}>View All Games</Link>
                     </div>

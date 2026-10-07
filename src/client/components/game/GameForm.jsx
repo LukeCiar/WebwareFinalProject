@@ -50,7 +50,7 @@ const GameForm = ({onSubmit}) => {
 
     return (
         <>
-            <button type="button" className="btn btn-primary" onClick={() => setOpen(true)}>Add Game</button>
+            <button type="button" className="btn btn-primary" onClick={() => setOpen(true)}>Add Custom Game</button>
 
             {open && (
                 <div className="modal d-block" tabIndex="-1" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>

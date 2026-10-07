@@ -40,7 +40,13 @@ function AllGamesPage() {
         <div className="container-fluid px-4">
             <div className="row">
                 <section className="col">
-                    <h2>All Games</h2>
+                    <div className="d-flex justify-content-between mb-3">
+                        <h2>All Games</h2>
+                        <div className="d-flex">
+                            <p className="my-auto me-3">Can't find a game you love? Feel free to add it!</p>
+                            <GameForm onSubmit={() => setReloadGames(reloadGames+1)} />
+                        </div>
+                    </div>
                     <div className="d-flex gap-2 mb-3">
                     <input className="form-control" type="search" placeholder="Search games..." aria-label="Search games"
                            value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
@@ -65,10 +71,6 @@ function AllGamesPage() {
                     </div>
                     {visibleGames.length > 0 ? <GameList games={visibleGames} /> : <p>No games found.</p>}
                 </section>
-            </div>
-            <div className="row">
-                <h3>Can't find a Game you Love? Feel free to add it!</h3>
-                <GameForm className="col" onSubmit={() => setReloadGames(reloadGames+1)} />
             </div>
         </div>
     )   
