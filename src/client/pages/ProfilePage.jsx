@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navigate, useOutletContext } from "react-router-dom";
+import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import Achievements from "../components/Achievements";
 import ProfilePicture from "../components/ProfilePicture";
 import MatchList from "../components/match/MatchList";
@@ -31,7 +31,8 @@ function ProfilePage() {
     const [newPassword, setNewPassword] = useState("");
     const [newProfilePicture, setNewProfilePicture] = useState(null);
     const [error, setError] = useState("");
-    const [matches, setMatches] = useState([])
+    const [matches, setMatches] = useState([]);
+    const navigate = useNavigate();
     
     useEffect(() => {
         if (user != null) {
@@ -160,20 +161,23 @@ function ProfilePage() {
                             {user.bio || "Click to add a bio..."}
                         </p>
                     </button>
-
-                    <section>
-                        <h2> Achivements: </h2>
-                        <Achievements username={user.username} />
-                    </section>
-
-                    <section>
-                        <h2> Recently Played Games: </h2>
-                        <MatchList matches={[...matches].reverse()} />
-                    </section>
                 </>
             )
         }
     };
+
+    const handleDeleteAccount = async () => {
+        const confirmed = window.confirm(`Are you sure you want to your account?`)
+        if(confirmed) {
+            await fetch("/deleteUser", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({username: user.username})
+            })
+            setUser(null)
+            navigate("/")
+        }
+    }
 
     return (
         <>  
@@ -197,12 +201,25 @@ function ProfilePage() {
             <button onClick={() => setChangeSettings(CHANGE_PASSWORD)}>
                 Change Password
             </button>
+            <button onClick={() => handleDeleteAccount()}>
+                Delete Account
+            </button>
 
             <br />
 
             {error && <p style={{ color: "#dc3545" }}>{error}</p>}
 
             {popupManager()}
+
+            <section>
+                <h2> Achivements: </h2>
+                <Achievements username={user.username} />
+            </section>
+
+            <section>
+                <h2> Recently Played Games: </h2>
+                <MatchList matches={[...matches].reverse()} matchCount={5} />
+            </section>
         </>
     )
 }

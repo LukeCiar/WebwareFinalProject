@@ -47,7 +47,7 @@ passport.use(new LocalStrategy(async (username, password, done) => {
         if (user === null) {
             const passwordHash = await bcrypt.hash(password, 10)
             // Achievement "1" is "Create an account"
-            await db.addUser({ username, passwordHash, bio: "", achievements: ["1"] })
+            await db.addUser({ username, passwordHash, bio: "", achievements: [] })
             user = await db.getUserForAuth(username)
             isNew = true
         }
@@ -225,9 +225,11 @@ app.post("/getUserByName", async (req, res) => {
 })
 
 //See the doc comment on modifyUser for details
-// Users can only modify or delete their own account. Credentials, the username and
-// achievements can't be set from here (use the /api/profile endpoints instead)
-const PROTECTED_USER_FIELDS = ["_id", "username", "passwordHash", "achievements"]
+// Users can only modify or delete their own account. Achievements need to be editable by everyone
+app.post("/modifyUserAchievement", async (req, res) => {
+    await db.modifyUser(req.body.username, {"achievements":req.body.update})
+    res.status(200).end()
+})
 
 app.post("/modifyUser", requireAuth, async (req, res) => {
     await db.modifyUser(req.body.username, req.body.update)

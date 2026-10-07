@@ -67,7 +67,7 @@ function UserPage() {
             
             <section>
                 <h2> Recently Played Games: </h2>
-                <MatchList matches={[...matches].reverse()} />
+                <MatchList matches={[...matches].reverse()} matchCount={5} />
             </section>
         </>
     )   

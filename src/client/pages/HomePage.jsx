@@ -39,11 +39,11 @@ function HomePage() {
                 <GameForm onSubmit={() => setReloadGames(reloadGames+1)} />
             </div>
             <div className="row">
-                <section className="col">
+                <section className="col-lg-6">
                     <h2>Recent Matches</h2>
                     <MatchList matches={[...matches].reverse().slice(0,10)} />
                 </section>
-                <section className="col">
+                <section className="col-lg-6">
                     <h2>Official Games</h2>
                     <GameList games={games} />
                 </section>

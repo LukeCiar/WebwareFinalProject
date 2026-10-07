@@ -43,9 +43,7 @@ async function AwardAchievementsFunction(listUsernames) {
         }
         if(!achievements.includes("2")) {
             // Play your first game
-            if (userMatches.length >= 1) {
-                achievements.push("2")
-            }
+            achievements.push("2")
         }
         if(!achievements.includes("3")) {
             // Play your 5 games
@@ -143,10 +141,10 @@ async function AwardAchievementsFunction(listUsernames) {
             const userExists = await doesUserExistResponse.json();
 
             if (userExists != null) {
-                const userResponse = await fetch("/modifyUserAchievement", 
+                const userResponse = await fetch("/modifyUser", 
                     {method: "POST",
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify( {"username":username, "update":achievements } ) 
+                    body: JSON.stringify( {"username":username, "update":{"achievements":achievements} } ) 
                     }
                 )
             }
