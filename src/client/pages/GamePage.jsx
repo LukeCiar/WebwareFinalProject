@@ -57,6 +57,13 @@ function GamePage() {
         )
     }
 
+    // The player with the most wins in this game (the first one to reach it if there's a tie)
+    const winCounts = {}
+    matches.forEach(match => match.players.forEach(player => {
+        if (player.won) winCounts[player.name] = (winCounts[player.name] ?? 0) + 1
+    }))
+    const topPlayer = Object.entries(winCounts).sort((a, b) => b[1] - a[1])[0]
+
     return (
         <div style={{width: "60rem", margin: "0 auto"}} className="py-2">
            <h1 style={{textAlign: "center"}} className="mb-4">{game.name}</h1>
@@ -77,6 +84,12 @@ function GamePage() {
             {game.tags && 
                 <p>
                     <strong>Tags:</strong> {game.tags.join(", ")}
+                </p>
+            }
+
+            {topPlayer &&
+                <p>
+                    <strong>Top player:</strong> {topPlayer[0]} ({topPlayer[1]} {topPlayer[1] === 1 ? "win" : "wins"})
                 </p>
             }
 

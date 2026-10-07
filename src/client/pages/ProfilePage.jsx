@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import Achievements from "../components/Achievements";
 import ProfilePicture from "../components/ProfilePicture";
 import MatchList from "../components/match/MatchList";
+import WinLossRecord from "../components/WinLossRecord";
 
 // Values for what "page" to display: the default one or one that lets you edit something
 const NO_CHANGES = 0;
@@ -210,6 +211,8 @@ function ProfilePage() {
             {error && <p style={{ color: "#dc3545" }}>{error}</p>}
 
             {popupManager()}
+
+            <WinLossRecord username={user.username} matches={matches} />
 
             <section>
                 <h2> Achivements: </h2>

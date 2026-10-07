@@ -4,6 +4,7 @@ import {useParams} from "react-router-dom"
 import Achievements from "../components/Achievements"
 import ProfilePicture from "../components/ProfilePicture"
 import MatchList from "../components/match/MatchList"
+import WinLossRecord from "../components/WinLossRecord"
 
 function UserPage() { 
     const { username } = useParams();
@@ -59,6 +60,7 @@ function UserPage() {
                         <p> 
                             {bio}
                         </p>
+                        <WinLossRecord username={username} matches={matches} />
                         <h2> Achivements: </h2>
                         <Achievements username={username} />
                     </>
