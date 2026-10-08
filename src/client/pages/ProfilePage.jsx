@@ -233,7 +233,7 @@ function ProfilePage() {
                 <button className="btn btn-outline-primary me-2" onClick={() => startBioEdit()}>
                     Change Bio
                 </button>
-                <button className="btn btn-outline-primary me-2" onClick={() => handleDeleteAccount()}>
+                <button className="btn btn-outline-danger me-2" onClick={() => handleDeleteAccount()}>
                     Delete Account
                 </button>
 
