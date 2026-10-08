@@ -66,43 +66,46 @@ function GamePage() {
 
     return (
         <div style={{width: "60rem", margin: "0 auto"}} className="py-2">
-           <h1 style={{textAlign: "center"}} className="mb-4">{game.name}</h1>
-           <img style={{display: "block", margin: "0 auto"}}
+            <h1 style={{textAlign: "center"}} className="mb-4">{game.name}</h1>
+            <img style={{display: "block", margin: "0 auto"}}
                 className="my-2"
                 src={ game.image ? `/gamePictures/${game.image}` : "/game-missing-image.png" }
                 alt={ `Picture of ${game.name}` }
             />
-            <div className="d-flex justify-content-center gap-2 mb-3">
-                <EditGameForm game={game} onSubmit={() => setReload(reload+1)} />
-                <MatchForm key={game.name} gameName={game.name} onSubmit={() => setReload(reload+1)} />
+            <div className="d-flex justify-content-center gap-2 mb-2">
+                <p>
+                    {game.official && <span className="badge text-bg-success me-1">Official</span>}
+                    {game.tags?.map((tag) => <span key={tag} className="badge text-bg-secondary me-1">{tag}</span>)}
+                </p>
             </div>
-            {game.description &&
-                <p>
-                    <strong>Description:</strong> {game.description}
+            <div className="d-flex justify-content-center gap-2">
+                <p className="lead">
+                    {game.description}
                 </p>
-            }
-            {game.tags && 
+            </div>
+            <div className="d-flex justify-content-center gap-2 mb-2">
                 <p>
-                    <strong>Tags:</strong> {game.tags.join(", ")}
+                    {/*<strong>Top player:</strong> {topPlayer[0]} ({topPlayer[1]} {topPlayer[1] === 1 ? "win" : "wins"})*/}
                 </p>
+            </div>
+
+
+            {game.official ?
+                <div className="input-group d-flex justify-content-center gap-2 mb-3">
+                    <MatchForm key={game.name} gameName={game.name} onSubmit={() => setReload(reload+1)} />
+                </div>
+                :
+                <div className="input-group d-flex justify-content-center gap-2 mb-3">
+                    <MatchForm key={game.name} gameName={game.name} onSubmit={() => setReload(reload+1)} />
+                    <EditGameForm game={game} onSubmit={() => setReload(reload+1)} />
+                    <button onClick={deleteGame} className="btn btn-danger">
+                        Delete Game
+                    </button>
+                </div>
             }
 
-            {topPlayer &&
-                <p>
-                    <strong>Top player:</strong> {topPlayer[0]} ({topPlayer[1]} {topPlayer[1] === 1 ? "win" : "wins"})
-                </p>
-            }
-
-            <h2>Matches of this Game:</h2>
+            <h2>Recent Matches of {game.name}</h2>
             <MatchList matches={[...matches].reverse()} matchCount={5}/>
-
-            <button 
-                onClick={deleteGame}
-                className="btn btn-danger mt-2"
-                style={{display: "block", margin: "0 auto"}}
-            >
-                Delete Game
-            </button>
         </div>
     )
 }
