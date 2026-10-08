@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useOutletContext } from "react-router-dom";
 import Achievements from "../components/Achievements";
 import ProfilePicture from "../components/ProfilePicture";
 import MatchList from "../components/match/MatchList";
+import WinLossRecord from "../components/WinLossRecord";
 
 // Values for what "page" to display: the default one or one that lets you edit something
 const NO_CHANGES = 0;
@@ -180,7 +181,7 @@ function ProfilePage() {
     }
 
     return (
-        <>  
+        <div className="m-3">  
             <div className="input-group mb-3">
                 <button className="input-group-prepend" onClick={() => setChangeSettings(CHANGE_PROFILEPICTURE)}>
                     {user == null ?
@@ -205,22 +206,22 @@ function ProfilePage() {
                 Delete Account
             </button>
 
-            <br />
-
             {error && <p style={{ color: "#dc3545" }}>{error}</p>}
 
             {popupManager()}
+
+            <WinLossRecord username={user.username} matches={matches} />
 
             <section>
                 <h2> Achivements: </h2>
                 <Achievements username={user.username} />
             </section>
 
-            <section>
-                <h2> Recently Played Games: </h2>
+            <section className="pb-3">
+                <h2> Recently Played Matches: </h2>
                 <MatchList matches={[...matches].reverse()} matchCount={5} />
             </section>
-        </>
+        </div>
     )
 }
 export default ProfilePage;

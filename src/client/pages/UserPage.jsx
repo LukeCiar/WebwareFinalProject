@@ -4,6 +4,7 @@ import {useParams} from "react-router-dom"
 import Achievements from "../components/Achievements"
 import ProfilePicture from "../components/ProfilePicture"
 import MatchList from "../components/match/MatchList"
+import WinLossRecord from "../components/WinLossRecord"
 
 function UserPage() { 
     const { username } = useParams();
@@ -43,7 +44,7 @@ function UserPage() {
     }, [])
 
     return (
-        <>  
+        <div className="m-3">
             <ProfilePicture name={profilePicture} alttext={username+"'s profile picture showing a "+profilePicture}/>
             
             <section>
@@ -59,6 +60,7 @@ function UserPage() {
                         <p> 
                             {bio}
                         </p>
+                        <WinLossRecord username={username} matches={matches} />
                         <h2> Achivements: </h2>
                         <Achievements username={username} />
                     </>
@@ -69,7 +71,7 @@ function UserPage() {
                 <h2> Recently Played Games: </h2>
                 <MatchList matches={[...matches].reverse()} matchCount={5} />
             </section>
-        </>
+        </div>
     )   
 }
 export default UserPage;
