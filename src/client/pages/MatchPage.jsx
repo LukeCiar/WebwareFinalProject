@@ -70,13 +70,28 @@ function MatchPage() {
     }
 
     return (
-        <div className="m-4">
-            <h1>{match.datePlayed} Match of {match.gameName}</h1>
+        <div className="mx-4">
+            <h1>Match of {match.gameName}</h1>
+            <p className="lead">Played on {match.datePlayed}</p>
 
-            {game && <GameCard game={game} />}
+            <div className="mb-3">
+                {game && <GameCard game={game} />}
+            </div>
+
+            <div className="input-group">
+                <button onClick = {() => modifying ? setModifying(false) : setModifying(true)} className = "btn btn-outline-primary me-2">
+                    Modify Match
+                </button>
+
+                <button onClick = {handleDelete} className = "btn btn-outline-danger me-2">
+                    Delete Match
+                </button>
+            </div>
+
+            <hr />
             
-            <h2 className="mt-3 mb-0"> Players: </h2>
-            <div className="d-flex flex-wrap gap-3">
+            <h2 className="mb-2">Players</h2>
+            <div className="d-flex flex-wrap gap-3 mb-5">
                 {match.players.map((player, i) => (
                     <div key={i} className="d-flex flex-column align-items-center">
                         <span style={{visibility: player.won ? "visible" : "hidden"}}>👑</span>
@@ -91,23 +106,11 @@ function MatchPage() {
                 ))}
             </div>
 
-            <h2 className="mt-3">Notes:</h2>
+            <h2 className="mb-3">Notes</h2>
             {match.notes}
 
             <div className="w-25 mx-auto mt-3 d-flex">
-                <button
-                    onClick = {() => modifying ? setModifying(false) : setModifying(true)}
-                    className = "btn btn-warning me-2"
-                >
-                    Modify Match
-                </button>
 
-                <button
-                    onClick = {handleDelete}
-                    className = "btn btn-danger ms-auto"
-                >
-                    Delete Match
-                </button>
             </div>
             
             {modifying && 
