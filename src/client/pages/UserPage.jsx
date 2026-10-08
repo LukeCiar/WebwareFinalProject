@@ -9,10 +9,9 @@ import WinLossRecord from "../components/WinLossRecord"
 function UserPage() { 
     const { username } = useParams();
     const [userExists, setUserExists] = useState(false);
-    // Given username get the profilePicture, bio, and achivements list from server
+    // Given username get the profilePicture, bio, and achievements list from server
     const [profilePicture, setProfilePicture] = useState("");
     const [bio, setBio] = useState("");
-    const achivements = [];
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -24,7 +23,7 @@ function UserPage() {
             const user = await response.json()
             setBio(user?.bio ?? "")
             setProfilePicture(user?.profilePicture ?? "")
-            setUserExists(user == null)
+            setUserExists(user != null)
         }
         fetchUser()
     }, [username])
@@ -44,31 +43,36 @@ function UserPage() {
     }, [])
 
     return (
-        <div className="m-3">
-            <ProfilePicture name={profilePicture} alttext={username+"'s profile picture showing a "+profilePicture}/>
-            
+        <div className="mx-4">
             <section>
-                {userExists ? 
-                    <h1>
-                        {username+" (No account created)"}
-                    </h1>
-                    :
-                    <>
+                <div className="input-group mb-3">
+                    <div className="align-self-center me-2">
+                        <ProfilePicture name={profilePicture} alttext={username+"'s profile picture showing a " + profilePicture}/>
+                    </div>
+                    <div className="align-self-center">
                         <h1>
                             {username}
                         </h1>
-                        <p> 
-                            {bio}
-                        </p>
-                        <WinLossRecord username={username} matches={matches} />
-                        <h2> Achivements: </h2>
-                        <Achievements username={username} />
-                    </>
-                }
+                    </div>
+                </div>
+                <p className="lead">
+                    {userExists ? bio : "No account created"}
+                </p>
+                {userExists ? <WinLossRecord username={username} matches={matches} /> : <></>}
             </section>
+
+            <hr />
+
+            {userExists ?
+                <section className="mb-5">
+                    <h2 className="mb-3">Achievements</h2>
+                    <Achievements username={username} />
+                </section>
+                : <></>
+            }
             
             <section>
-                <h2> Recently Played Games: </h2>
+                <h2> Recently Played Matches: </h2>
                 <MatchList matches={[...matches].reverse()} matchCount={5} />
             </section>
         </div>

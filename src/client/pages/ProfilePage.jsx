@@ -22,10 +22,6 @@ function ProfilePage() {
     // user is the currently logged in user (null when signed out), see App.jsx
     const { user, setUser, userLoaded } = useOutletContext();
 
-    // Get profilePicture and achivements list from server from currently logged in person
-    //const bio = "Some text about me...";
-    const achivements = [];
-
     const [changeSettings, setChangeSettings] = useState(NO_CHANGES);
     const [bioDraft, setBioDraft] = useState("");
     const [newUsername, setNewUsername] = useState("");
@@ -91,13 +87,13 @@ function ProfilePage() {
     
     const changeProfilePicture = async function () {
         if (user != null) {
-            const userResponse = await fetch("/modifyUser", 
+            await fetch("/modifyUser",
                 {method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify( {"username":user.username, "update":{"profilePicture":newProfilePicture} } ) 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify( {"username":user.username, "update":{"profilePicture":newProfilePicture} } )
                 }
-            )   
-            stopEditing()    
+            );
+            stopEditing()
         }
     }
 
@@ -115,60 +111,83 @@ function ProfilePage() {
     })
 
     const popupManager = () => {
-        if (changeSettings == CHANGE_PROFILEPICTURE) {
+        if (changeSettings === CHANGE_PROFILEPICTURE) {
             return (
                 <>
-                    {profilePictureOptions()}
-                    <button onClick={stopEditing}>Cancel</button>
-                    <button onClick={changeProfilePicture}>Submit</button>
+                    <hr />
+                    <div className="mb-2">
+                        {profilePictureOptions()}
+                    </div>
+                    <div className="input-group">
+                        <button className="btn btn-outline-danger me-2" onClick={stopEditing}>Cancel</button>
+                        <button className="btn btn-primary me-2" onClick={changeProfilePicture}>Submit</button>
+                    </div>
                 </>
             )
         }
-        else if (changeSettings == CHANGE_USERNAME) {
+        else if (changeSettings === CHANGE_USERNAME) {
             return (
                 <>
-                    <p>Please enter a new Username</p>
-                    <input value={newUsername} onChange={(event) => setNewUsername(event.target.value)} />
-                    <button onClick={stopEditing}>Cancel</button>
-                    <button onClick={changeUsername}>Submit</button>
+                    <hr />
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            value={newUsername}
+                            onChange={(event) => setNewUsername(event.target.value)}
+                            placeholder="New username..."
+                            className="input-group-text me-2"
+                        />
+                        <button className="btn btn-outline-danger me-2" onClick={stopEditing}>Cancel</button>
+                        <button className="btn btn-primary me-2" onClick={changeUsername}>Submit</button>
+                    </div>
                 </>
             )
         }
-        else if (changeSettings == CHANGE_PASSWORD) {
+        else if (changeSettings === CHANGE_PASSWORD) {
             return (
                 <>
-                    <p>Please enter a new Password</p>
-                    <input type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} />
-                    <button onClick={stopEditing}>Cancel</button>
-                    <button onClick={changePassword}>Submit</button>
+                    <hr />
+                    <div className="input-group">
+                        <input
+                            type="password"
+                            value={newPassword}
+                            onChange={(event) => setNewPassword(event.target.value)}
+                            placeholder="New password..."
+                            className="input-group-text me-2"
+                        />
+                        <button className="btn btn-outline-danger me-2" onClick={stopEditing}>Cancel</button>
+                        <button className="btn btn-primary me-2" onClick={changePassword}>Submit</button>
+                    </div>
                 </>
             )
         }
-        else if (changeSettings == CHANGE_BIO) {
+        else if (changeSettings === CHANGE_BIO) {
             return (
                 <>
-                    <textarea className="form-control" value={bioDraft} maxLength={500} onChange={(event) => setBioDraft(event.target.value)} />
-                    <br />
-                    <button onClick={stopEditing}>Cancel</button>
-                    <button onClick={changeBio}>Save Change</button>
+                    <hr />
+                    <div className="mb-2">
+                        <textarea
+                            className="form-control"
+                            value={bioDraft}
+                            maxLength={500}
+                            onChange={(event) => setBioDraft(event.target.value)}
+                            placeholder="New bio..."
+                        />
+                    </div>
+                    <div className="input-group">
+                        <button className="btn btn-outline-danger me-2" onClick={stopEditing}>Cancel</button>
+                        <button className="btn btn-primary me-2" onClick={changeBio}>Submit</button>
+                    </div>
                 </>
             )
         }
         else {
-            return (
-                <>
-                    <button className="form-control" onClick={startBioEdit}>
-                        <p>
-                            {user.bio || "Click to add a bio..."}
-                        </p>
-                    </button>
-                </>
-            )
+            return (<></>)
         }
     };
 
     const handleDeleteAccount = async () => {
-        const confirmed = window.confirm(`Are you sure you want to your account?`)
+        const confirmed = window.confirm(`Are you sure you want to delete your account?`)
         if(confirmed) {
             await fetch("/deleteUser", {
                 method: "POST",
@@ -181,44 +200,57 @@ function ProfilePage() {
     }
 
     return (
-        <div className="m-3">  
-            <div className="input-group mb-3">
-                <button className="input-group-prepend" onClick={() => setChangeSettings(CHANGE_PROFILEPICTURE)}>
-                    {user == null ?
-                    <ProfilePicture name={""} alttext={""}/>
-                    :
-                    <ProfilePicture name={user.profilePicture} alttext={user.username+"'s profile picture showing a "+user.profilePicture}/>
-                    }
-                </button>
-                <button className="input-group-text" onClick={() => setChangeSettings(CHANGE_USERNAME)}>
-                    <h1>
-                        {user.username}
-                    </h1>
-                </button>
-            </div>
-            <button onClick={() => setChangeSettings(CHANGE_USERNAME)}>
-                Change Username
-            </button>
-            <button onClick={() => setChangeSettings(CHANGE_PASSWORD)}>
-                Change Password
-            </button>
-            <button onClick={() => handleDeleteAccount()}>
-                Delete Account
-            </button>
-
-            {error && <p style={{ color: "#dc3545" }}>{error}</p>}
-
-            {popupManager()}
-
-            <WinLossRecord username={user.username} matches={matches} />
-
+        <div className="mx-4">
             <section>
-                <h2> Achivements: </h2>
+                <div className="input-group mb-3">
+                    <div className="align-self-center me-2">
+                        {user == null ?
+                        <ProfilePicture name={""} alttext={""}/>
+                        :
+                        <ProfilePicture name={user.profilePicture} alttext={user.username+"'s profile picture showing a "+user.profilePicture}/>
+                        }
+                    </div>
+                    <div className="align-self-center">
+                        <h1>
+                            {user.username}
+                        </h1>
+                    </div>
+                </div>
+                <p className="lead">
+                    {user.bio}
+                </p>
+                <WinLossRecord username={user.username} matches={matches} />
+
+                <button className="btn btn-outline-primary me-2" onClick={() => setChangeSettings(CHANGE_USERNAME)}>
+                    Change Username
+                </button>
+                <button className="btn btn-outline-primary me-2" onClick={() => setChangeSettings(CHANGE_PASSWORD)}>
+                    Change Password
+                </button>
+                <button className="btn btn-outline-primary me-2" onClick={() => setChangeSettings(CHANGE_PROFILEPICTURE)}>
+                    Change Profile Picture
+                </button>
+                <button className="btn btn-outline-primary me-2" onClick={() => startBioEdit()}>
+                    Change Bio
+                </button>
+                <button className="btn btn-outline-primary me-2" onClick={() => handleDeleteAccount()}>
+                    Delete Account
+                </button>
+
+                {error && <p style={{ color: "#dc3545" }}>{error}</p>}
+
+                {popupManager()}
+            </section>
+
+            <hr />
+
+            <section className="mb-5">
+                <h2 className="mb-3">Achievements</h2>
                 <Achievements username={user.username} />
             </section>
 
-            <section className="pb-3">
-                <h2> Recently Played Matches: </h2>
+            <section className="mb-5">
+                <h2 className="mb-3">Recently Played Matches</h2>
                 <MatchList matches={[...matches].reverse()} matchCount={5} />
             </section>
         </div>
