@@ -58,7 +58,7 @@ function Topbar({ user, setUser }) {
                         </li>
                     </ul>
                     <span className="dropdown">
-                        <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <a className="nav-link dropdown-toggle d-flex align-items-center text-nowrap" href="#" role="button" data-bs-toggle="dropdown">
                             {profileDropdown}
                         </a>
                         <ul className="dropdown-menu dropdown-menu-end">
