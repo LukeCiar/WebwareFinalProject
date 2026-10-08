@@ -70,13 +70,12 @@ function MatchPage() {
     }
 
     return (
-        <>
+        <div className="m-4">
             <h1>{match.datePlayed} Match of {match.gameName}</h1>
 
-            {/* Update to reflect new GameCard */}
-            {game && <GameCard game={game} className="w-50" />}
+            {game && <GameCard game={game} />}
             
-            <h2> Players: </h2>
+            <h2 className="mt-3 mb-0"> Players: </h2>
             <div className="d-flex flex-wrap gap-3">
                 {match.players.map((player, i) => (
                     <div key={i} className="d-flex flex-column align-items-center">
@@ -92,13 +91,13 @@ function MatchPage() {
                 ))}
             </div>
 
-            <h2>Notes:</h2>
+            <h2 className="mt-3">Notes:</h2>
             {match.notes}
 
-            <div className="w-25 m-auto d-flex">
+            <div className="w-25 mx-auto mt-3 d-flex">
                 <button
                     onClick = {() => modifying ? setModifying(false) : setModifying(true)}
-                    className = "btn btn-warning"
+                    className = "btn btn-warning me-2"
                 >
                     Modify Match
                 </button>
@@ -114,7 +113,7 @@ function MatchPage() {
             {modifying && 
                 <MatchForm onSubmit={() => setModifying(false)} matchToEdit={match} />
             }
-        </>
+        </div>
     )
 }
 

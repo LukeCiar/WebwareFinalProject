@@ -3,8 +3,7 @@ import ProfilePicture from "../ProfilePicture"
 
 function MatchCard({ match, gameImage, profilePictures = {} }) {
     return (
-        <Link to={`/match/${match._id}`} className="card flex-row overflow-hidden text-reset text-decoration-none">
-            {/* No fixed height, so the image stretches to the full height of the card */}
+        <Link to={`/match/${match._id}`} className="card flex-row overflow-hidden text-reset text-decoration-none" style={{height: "120px"}}>
             <img
                 src={ gameImage ? `/gamePictures/${gameImage}` : "/game-missing-image.png" }
                 alt={ `Picture of ${match.gameName}` }

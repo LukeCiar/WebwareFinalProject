@@ -42,26 +42,26 @@ function AllGamesPage() {
                 <section className="col">
                     <h2>All Games</h2>
                     <div className="d-flex gap-2 mb-3">
-                    <input className="form-control" type="search" placeholder="Search games..." aria-label="Search games"
-                           value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                    <div className="dropdown">
-                        {/* auto-close "outside" keeps the menu open while ticking several tags */}
-                        <button className="btn btn-outline-secondary dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" data-bs-auto-close="outside">
-                            Filter by tags{selectedTags.length > 0 && ` (${selectedTags.length})`}
-                        </button>
-                        <ul className="dropdown-menu px-3">
-                            {allTags.map(tag => (
-                                <li key={tag}>
-                                    <label className="form-check">
-                                        <input className="form-check-input" type="checkbox"
-                                               checked={selectedTags.includes(tag)} onChange={() => toggleTag(tag)} />
-                                        {tag}
-                                    </label>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                        <input className="form-control" type="search" placeholder="Search games..." aria-label="Search games"
+                            value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                        <div className="dropdown">
+                            {/* auto-close "outside" keeps the menu open while ticking several tags */}
+                            <button className="btn btn-outline-secondary dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                                Filter by tags{selectedTags.length > 0 && ` (${selectedTags.length})`}
+                            </button>
+                            <ul className="dropdown-menu px-3">
+                                {allTags.map(tag => (
+                                    <li key={tag}>
+                                        <label className="form-check">
+                                            <input className="form-check-input" type="checkbox"
+                                                checked={selectedTags.includes(tag)} onChange={() => toggleTag(tag)} />
+                                            {tag}
+                                        </label>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                     {visibleGames.length > 0 ? <GameList games={visibleGames} /> : <p>No games found.</p>}
                 </section>
