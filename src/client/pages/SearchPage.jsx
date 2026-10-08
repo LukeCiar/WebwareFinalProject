@@ -21,11 +21,11 @@ function SearchPage() {
 
     return (
         <div className="container-fluid px-4">
-            <h2>Search results for "{query}"</h2>
+            <h1 className="mb-3">Search results for "{query}"</h1>
             <div className="row">
                 <section className="col">
                     <h2>Games</h2>
-                    {games.length > 0 ? <GameList games={games} /> : <p>No games found.</p>}
+                    {games.length > 0 ? <GameList games={games} /> : <p className="lead">No games found</p>}
                 </section>
                 <section className="col">
                     <h2>Users</h2>
@@ -33,7 +33,7 @@ function SearchPage() {
                         <div className="d-flex flex-wrap gap-2">
                             {users.map((u) => <UserCard key={u.username} user={u} />)}
                         </div>
-                    ) : <p>No users found.</p>}
+                    ) : <p className="lead">No users found</p>}
                 </section>
             </div>
         </div>
