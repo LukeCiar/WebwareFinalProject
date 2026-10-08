@@ -2,7 +2,7 @@ import { useState } from "react"
 import { GAME_TAGS } from "./gameTags"
 import { WIN_CONDITIONS } from "./winConditions"
 
-const GameForm = ({onSubmit}) => {
+const GameForm = ({onSubmit, fullWidth = false}) => {
     const [open, setOpen] = useState(false)
     const [error, setError] = useState("")
     const [isCardGame, setIsCardGame] = useState(false)
@@ -50,7 +50,7 @@ const GameForm = ({onSubmit}) => {
 
     return (
         <>
-            <button type="button" className="btn btn-primary" onClick={() => setOpen(true)}>Add Game</button>
+            <button type="button" className={"btn btn-primary" + (fullWidth ? " w-100" : "")} onClick={() => setOpen(true)}>Add Game</button>
 
             {open && (
                 <div className="modal d-block" tabIndex="-1" style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>

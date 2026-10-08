@@ -44,7 +44,7 @@ function UserPage() {
     }, [])
 
     return (
-        <>  
+        <div className="m-3">
             <ProfilePicture name={profilePicture} alttext={username+"'s profile picture showing a "+profilePicture}/>
             
             <section>
@@ -71,7 +71,7 @@ function UserPage() {
                 <h2> Recently Played Games: </h2>
                 <MatchList matches={[...matches].reverse()} matchCount={5} />
             </section>
-        </>
+        </div>
     )   
 }
 export default UserPage;

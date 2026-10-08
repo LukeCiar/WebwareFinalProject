@@ -33,8 +33,9 @@ function HomePage() {
     }, [reloadGames])
 
     return (
-        <div className="container-fluid px-4">
-            <div className="d-flex gap-2 mb-3">
+        <div className="container-fluid px-4 py-2">
+            <h1 className="text-center">Board Game Tracker</h1>
+            <div className="d-flex gap-2 my-4 mx-auto w-auto justify-content-center">
                 <MatchForm onSubmit={() => setReloadMatches(reloadMatches+1)} />
                 <GameForm onSubmit={() => setReloadGames(reloadGames+1)} />
             </div>

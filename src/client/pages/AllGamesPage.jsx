@@ -66,9 +66,11 @@ function AllGamesPage() {
                     {visibleGames.length > 0 ? <GameList games={visibleGames} /> : <p>No games found.</p>}
                 </section>
             </div>
-            <div className="row">
-                <h3>Can't find a Game you Love? Feel free to add it!</h3>
-                <GameForm className="col" onSubmit={() => setReloadGames(reloadGames+1)} />
+            <div className="row justify-content-center">
+                <div className="col-6">
+                    <h3>Can't find a Game you Love? Feel free to add it!</h3>
+                        <GameForm onSubmit={() => setReloadGames(reloadGames+1)} fullWidth="true" />
+                </div>
             </div>
         </div>
     )   

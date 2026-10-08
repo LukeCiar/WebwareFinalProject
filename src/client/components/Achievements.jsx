@@ -5,14 +5,14 @@ function Achievements({username}) {
     // Storing an achivement in an dictionaly where key is achivement number and an achivement is a array of achivement name, description
     const LIST_OF_ACHIVEMENTS = {
         "1": ["Known Player", "Create an account", "profile"],
-        "2": ["Starting out", "Play your first game", "1Card"],
+        "2": ["Starting out", "Play your first match", "1Card"],
         "3": ["Getting into it", "Participate in 5 matches", "5Card"],
         "4": ["Player of games", "Participate in 10 matches", "10Card"],
         "5": ["Veteran Boardgamer", "Participate in 50 or more matches", "50Card"],
-        "6": ["Winner!", "Win your first game", "1Crown"],
+        "6": ["Winner!", "Win your first match", "1Crown"],
         "7": ["Deus ex Machina", "Win 10 or more matches", "10Crown"],
-        "8": ["Explorer", "Play 3 different types of games", "3Cards"],
-        "9": ["Jack of all trades", "Play 10 or more different types of games", "10Cards"],
+        "8": ["Explorer", "Play 3 different games", "3Cards"],
+        "9": ["Jack of all trades", "Play 10 or more different games", "10Cards"],
         "10": ["Dedication", "Win 5 different matches of the same game", "5Crowns"]
     }
 

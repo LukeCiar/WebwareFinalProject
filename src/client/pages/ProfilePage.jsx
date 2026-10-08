@@ -181,7 +181,7 @@ function ProfilePage() {
     }
 
     return (
-        <>  
+        <div className="m-3">  
             <div className="input-group mb-3">
                 <button className="input-group-prepend" onClick={() => setChangeSettings(CHANGE_PROFILEPICTURE)}>
                     {user == null ?
@@ -206,8 +206,6 @@ function ProfilePage() {
                 Delete Account
             </button>
 
-            <br />
-
             {error && <p style={{ color: "#dc3545" }}>{error}</p>}
 
             {popupManager()}
@@ -219,11 +217,11 @@ function ProfilePage() {
                 <Achievements username={user.username} />
             </section>
 
-            <section>
-                <h2> Recently Played Games: </h2>
+            <section className="pb-3">
+                <h2> Recently Played Matches: </h2>
                 <MatchList matches={[...matches].reverse()} matchCount={5} />
             </section>
-        </>
+        </div>
     )
 }
 export default ProfilePage;
