@@ -85,7 +85,7 @@ function GamePage() {
             </div>
             <div className="d-flex justify-content-center gap-2 mb-2">
                 <p>
-                    {/*<strong>Top player:</strong> {topPlayer[0]} ({topPlayer[1]} {topPlayer[1] === 1 ? "win" : "wins"})*/}
+                    {topPlayer && <><strong>Top player:</strong> {topPlayer[0]} ({topPlayer[1]} {topPlayer[1] === 1 ? "win" : "wins"})</>}
                 </p>
             </div>
 
